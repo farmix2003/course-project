@@ -57,10 +57,7 @@ function AdminPanel() {
   // );
 
   return (
-    <div
-      style={{ height: 400, width: "80%", marginLeft: "100px" }}
-      className="dark:bg-gray-500/30 p-2 mt-10 rounded-md"
-    >
+    <div className="bg-gray-600/30 dark:bg-gray-500/30 p-2 mt-10 rounded-md h-[400px] w-[95%] md:w-[80%] ml-[10px] md:ml-[100px]">
       <ToolBar
       // handleDeleteUser={handleDeleteUser}
       // handleBlockUsers={handleBlockUsers}
@@ -74,7 +71,7 @@ function AdminPanel() {
             <th>
               <input type="checkbox" />
             </th>
-            <th className="dark:text-gray-400">ID</th>
+            <th className="dark:text-gray-400 text-[16px]">ID</th>
             <th className="dark:text-gray-400"> Full Name</th>
             <th className="dark:text-gray-400">Email</th>
             <th className="dark:text-gray-400">Status</th>
