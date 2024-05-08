@@ -2,7 +2,9 @@
 
 import { DarkMode, LightMode, Login, Logout } from "@mui/icons-material";
 import SearchBar from "./SearchBar";
+import { useNavigate } from "react-router-dom";
 const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
+  const navigate = useNavigate();
   return (
     <div className="h-[60px] w-screen p-1 md:p-5 bg-[#A0AECD] flex border-white justify-between items-center dark:bg-gray-600/10 dark:text-white">
       <div>
@@ -15,7 +17,10 @@ const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
 
       <div className="flex justify-between items-center">
         {isLoggedIn && (
-          <button className="hidden md:flex dark:text-white font-semibold">
+          <button
+            className="hidden md:flex dark:text-white font-semibold"
+            onClick={() => navigate("/admin")}
+          >
             Admin
           </button>
         )}
@@ -26,10 +31,17 @@ const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
           {theme === "light" ? <LightMode /> : <DarkMode />}
         </button>
         <select className="bg-transparent mr-1 md:mr-5 dark:border-white border border-black outline-none rounded">
-          <option className="text-black text-[10px]">ENG</option>
-          <option className="text-black text-[10px]">UZB</option>
+          <option className="text-black text-[10px] md:text-[17px]">ENG</option>
+          <option className="text-black text-[10px] md:text-[17px]">UZB</option>
         </select>
-        {isLoggedIn ? <Logout sx={{ cursor: "pointer" }} /> : <Login />}
+        {isLoggedIn ? (
+          <Logout sx={{ cursor: "pointer" }} />
+        ) : (
+          <Login
+            onClick={() => navigate("/login")}
+            sx={{ cursor: "pointer" }}
+          />
+        )}
       </div>
     </div>
   );

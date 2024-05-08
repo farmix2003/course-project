@@ -4,10 +4,12 @@ import Home from "./components/Home";
 import { useEffect, useState } from "react";
 import Login from "./components/Login";
 import Register from "./components/Register";
-
+import AdminPanel from "./components/AdminPanel";
+import { useTranslation } from "react-i18next";
 function App() {
   const [theme, setTheme] = useState("light");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const t = useTranslation();
   useEffect(() => {
     if (theme === "light") {
       document.documentElement.classList.add("dark");
@@ -23,6 +25,7 @@ function App() {
   return (
     <div className="dark:bg-[#110022] h-screen w-screen">
       <Navbar
+        t={t}
         handleThemeChange={handleThemeChange}
         theme={theme}
         isLoggedIn={isLoggedIn}
@@ -32,6 +35,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </div>
   );
