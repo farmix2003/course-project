@@ -35,7 +35,10 @@ const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
           <option className="text-black text-[10px] md:text-[17px]">UZB</option>
         </select>
         {isLoggedIn ? (
-          <Logout sx={{ cursor: "pointer" }} />
+          <Logout
+            sx={{ cursor: "pointer" }}
+            onClick={() => navigate("/login")}
+          />
         ) : (
           <Login
             onClick={() => navigate("/login")}
