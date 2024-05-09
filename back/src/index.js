@@ -48,7 +48,7 @@ const Collections = mongoose.model('Collection', collectionSchema);
 const CollectionItems = mongoose.model('CollectionItem', collectionItemsSchema)
 const router = express.Router()
 
-
+app.use(router)
 app.get('/api/users/get-users', async (req, res) => {
     try {
         const users = await User.find();
@@ -60,9 +60,46 @@ app.get('/api/users/get-users', async (req, res) => {
 })
 
 router.post('/api/users/login', async (req, res) => {
-
+    const { email, password } = req.body
+    try {
+        const user = await User.findOne({ email })
+        if (!user || user.password !== password) {
+            return res.status(404).json({ success: false, message: 'Email or password is invalid' })
+        }
+        if (user.status === 'blocked') {
+            res.status(403).json({ success: false, message: 'Your account is blocked' })
+        }
+        console.log("Successfully logged in")
+        return res.status(200).json({ success: true, message: 'Successfully logged in' })
+    } catch (error) {
+        console.error('Error logging in user:', error);
+        res.status(500).json({ success: false, error: 'Failed to login user' });
+    }
 })
 
+router.post('/api/users/register', async (req, res) => {
+    const { username, email, password } = req.body;
+    try {
+        const existingUsersCount = await User.countDocuments();
+        let role = 'regular user';
+        if (existingUsersCount === 0) {
+            role = 'admin';
+        }
+        const newUser = {
+            _id: new mongoose.Types.ObjectId(),
+            username,
+            email,
+            password,
+            role
+        };
+        await User.create(newUser);
+        console.log('User registered successfully');
+        res.status(201).json({ success: true, message: 'User registered successfully' });
+    } catch (error) {
+        console.error('Error registering user:', error);
+        res.status(500).json({ success: false, error: 'Failed to register user' });
+    }
+});
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
