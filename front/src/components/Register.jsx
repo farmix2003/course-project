@@ -1,30 +1,44 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../server/server";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      const response = registerUser(username, email, password);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center h-[80%] mt-10">
-      <form className="w-[80%] md:w-[40%] h-[90%] flex flex-col bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md">
+      <form
+        onSubmit={handleSubmit}
+        className="w-[80%] md:w-[40%] h-[90%] flex flex-col bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
+      >
         <label
-          htmlFor="email"
+          htmlFor="text"
           className="dark:text-white font-semibold text-[18px] "
         >
-          First Name:
+          Username:
         </label>
         <input
           type="text"
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="outline-none dark:text-white p-1 bg-transparent border-b-2 border-black dark:border-white"
         />
-        <label
-          htmlFor="email"
-          className="dark:text-white font-semibold text-[18px] mt-5"
-        >
-          Last Name:
-        </label>
-        <input
-          type="text"
-          className="outline-none dark:text-white p-1 bg-transparent border-b-2 border-black dark:border-white"
-        />
+
         <label
           htmlFor="email"
           className="dark:text-white font-semibold text-[18px] mt-5"
@@ -33,6 +47,9 @@ const Login = () => {
         </label>
         <input
           type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="outline-none dark:text-white  p-1 bg-transparent border-b-2 border-black dark:border-white"
         />
         <label
@@ -43,6 +60,9 @@ const Login = () => {
         </label>
         <input
           type="password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="outline-none dark:text-white p-1 bg-transparent border-b-2 text-black border-black dark:border-white"
         />
         <button

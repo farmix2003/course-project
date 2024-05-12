@@ -5,7 +5,7 @@ dotenv.config()
 
 function generateToken(user) {
     const token = jwt.sign(
-        { userId: user._id, email: user.email },
+        { id: user._id, email: user.email },
         process.env.SECRET_KEY,
         { expiresIn: '1h' }
     );
@@ -13,8 +13,8 @@ function generateToken(user) {
 }
 function authenticateToken(req, res, next) {
 
-    const token = req.cookies.jwt;
-
+    const header = req.headers.authorization
+    const token = header && header.split(' ')[1];
 
     if (!token) {
         return res.status(401).json({ success: false, message: 'Unauthorized: No token provided' });

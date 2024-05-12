@@ -3,10 +3,16 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookiesParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import cors from 'cors'
 import { generateToken, authenticateToken } from './auth.js';
 const app = express()
 app.use(bodyParser.json())
 app.use(cookiesParser())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true
+}));
+
 dotenv.config()
 mongoose.connect(`mongodb+srv://ffarrux386:zr9zltWsSQpAB3lZ@cluster0.dvpgy9v.mongodb.net/mern`);
 
@@ -75,9 +81,9 @@ router.post('/api/users/login', async (req, res) => {
             res.status(403).json({ success: false, message: 'Your account is blocked' })
         }
         const token = generateToken(user)
-        res.cookie('jwt', token, { httpOnly: true })
+
         console.log("Successfully logged in")
-        return res.status(200).json({ success: true, message: 'Successfully logged in' })
+        return res.status(200).json({ success: true, message: 'Successfully logged in', token })
     } catch (error) {
         console.error('Error logging in user:', error);
         res.status(500).json({ success: false, error: 'Failed to login user' });
@@ -168,7 +174,7 @@ router.put('/api/users/remove-admin', authenticateToken, async (req, res) => {
 })
 
 router.delete('/api/users/delete', authenticateToken, async (req, res) => {
-    const { ids } = res.body;
+    const { ids } = req.body;
     if (!ids || !Array.isArray(ids)) {
         return res.status(400).json({ success: false, message: 'Invalid IDs provided' })
     }

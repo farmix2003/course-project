@@ -1,10 +1,43 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../server/server";
 
-const Login = () => {
+const Login = ({ setIsLoggedIn, setUser }) => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser(email, password);
+      const token = response.token;
+      window.localStorage.setItem("token", token);
+      setUser(email);
+      setIsLoggedIn(() => true);
+      navigate("/home");
+    } catch (e) {
+      if (e.response) {
+        if (e.status === 403) {
+          setError("Your account is blocked. Please contact support.");
+        } else {
+          setError("Invalid email or password");
+        }
+      } else {
+        setError("Failed to login");
+      }
+    }
+    console.log(email, password);
+  };
+
   return (
     <div className="flex justify-center items-center h-[80%]">
-      <form className=" w-[85%] md:w-[40%] h-[60%] flex flex-col bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md">
+      <form
+        onSubmit={handleLogin}
+        className=" w-[85%] md:w-[40%] h-[60%] flex flex-col bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
+      >
         <label
           htmlFor="email"
           className="dark:text-white font-semibold text-[20px]"
@@ -14,6 +47,8 @@ const Login = () => {
         <input
           type="email"
           className="outline-none  p-1 bg-transparent border-b-2 border-black dark:border-white"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <label
           htmlFor="password"
@@ -24,6 +59,8 @@ const Login = () => {
         <input
           type="password"
           className="outline-none  p-1 bg-transparent border-b-2 text-black border-black dark:border-white"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button
           type="submit"
