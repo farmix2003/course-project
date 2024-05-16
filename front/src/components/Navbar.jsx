@@ -3,12 +3,29 @@
 import { DarkMode, LightMode, Login, Logout } from "@mui/icons-material";
 import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
-const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
+import { logoutUser } from "../server/server";
+const Navbar = ({
+  handleThemeChange,
+  theme,
+  isLoggedIn,
+  setIsLoggedIn,
+  isAdmin,
+}) => {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <div className="h-[60px] w-screen p-1 md:p-5 bg-[#A0AECD] flex border-white justify-between items-center dark:bg-gray-600/10 dark:text-white">
       <div>
-        <h1 className=" text-xl md:text-3xl font-bold  dark:text-gray-200 ">
+        <h1
+          onClick={() => navigate("/")}
+          className=" text-xl md:text-3xl font-bold cursor-pointer  dark:text-gray-200 "
+        >
           Home
         </h1>
       </div>
@@ -16,7 +33,7 @@ const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
       <SearchBar />
 
       <div className="flex justify-between items-center">
-        {isLoggedIn && (
+        {isLoggedIn && isAdmin && (
           <button
             className="hidden md:flex dark:text-white font-semibold"
             onClick={() => navigate("/admin")}
@@ -35,10 +52,7 @@ const Navbar = ({ handleThemeChange, theme, isLoggedIn }) => {
           <option className="text-black text-[10px] md:text-[17px]">UZB</option>
         </select>
         {isLoggedIn ? (
-          <Logout
-            sx={{ cursor: "pointer" }}
-            onClick={() => navigate("/login")}
-          />
+          <Logout sx={{ cursor: "pointer" }} onClick={handleLogout} />
         ) : (
           <Login
             onClick={() => navigate("/login")}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../server/server";
 
-const Login = ({ setIsLoggedIn, setUser }) => {
+const Login = ({ setIsLoggedIn, setUserInfo }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -13,11 +13,14 @@ const Login = ({ setIsLoggedIn, setUser }) => {
     e.preventDefault();
     try {
       const response = await loginUser(email, password);
+      navigate("/");
       const token = response.token;
+      const userId = response.userId;
       window.localStorage.setItem("token", token);
-      setUser(email);
-      setIsLoggedIn(() => true);
-      navigate("/home");
+      window.localStorage.setItem("userId", userId);
+      // console.log(token);
+      setUserInfo(email);
+      setIsLoggedIn(true);
     } catch (e) {
       if (e.response) {
         if (e.status === 403) {

@@ -2,8 +2,6 @@ import axios from "./axios";
 
 export const getAllUsers = async () => {
     try {
-
-
         const response = await axios.get("/api/users/get-users", {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -126,6 +124,68 @@ export const removeAdmin = async (ids) => {
         return response.data;
     } catch (error) {
         console.log('Error removing admin:', error);
+        throw new Error;
+    }
+}
+export const logoutUser = async () => {
+    try {
+        await axios.post('/api/users/logout')
+        localStorage.removeItem("token");
+
+    } catch (e) {
+        console.log('Error logging out', e);
+        throw new Error;
+    }
+}
+export const createCollection = async (title,
+    description,
+    category,
+    image,
+    customFields) => {
+    try {
+        const userId = window.localStorage.getItem('userId');
+        const response = await axios.post('/api/collections', {
+            title,
+            description,
+            category,
+            image,
+            user_id: userId,
+            customFields
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+        return response.data;
+    } catch (e) {
+        console.log('Error while creating collection', e);
+        throw new Error;
+    }
+}
+export const getCollections = async () => {
+    try {
+        const response = await axios.get('/api/collections', {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            method: 'GET'
+        })
+        return response.data;
+    } catch (e) {
+        console.log("Error getting collections", e);
+        throw new Error;
+    }
+}
+export const deleteCollection = async (id) => {
+    try {
+        const response = await axios.delete(`/api/collections/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.log("Error deleting collection", error);
         throw new Error;
     }
 }

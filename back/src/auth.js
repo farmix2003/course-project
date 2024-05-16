@@ -29,4 +29,21 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
-export { generateToken, authenticateToken }
+const authorizeCollectionAccess = async (req, res, next) => {
+    try {
+        const collection = await Collection.findById(req.params.collectionId);
+        if (!collection) {
+            return res.status(404).json({ success: false, message: "Collection not found" });
+        }
+
+        if (req.user.id !== collection.user_id || req.user.role !== 'admin') {
+            return res.status(403).json({ success: false, message: "You are not authorized to perform this action" });
+        }
+
+        next();
+    } catch (error) {
+        console.log("Error authorizing collection access", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+export { generateToken, authenticateToken, authorizeCollectionAccess }
