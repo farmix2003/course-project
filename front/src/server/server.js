@@ -142,8 +142,8 @@ export const createCollection = async (title,
     category,
     image,
     customFields) => {
+    const userId = window.localStorage.getItem('userId');
     try {
-        const userId = window.localStorage.getItem('userId');
         const response = await axios.post('/api/collections', {
             title,
             description,
@@ -186,6 +186,74 @@ export const deleteCollection = async (id) => {
         return response.data;
     } catch (error) {
         console.log("Error deleting collection", error);
+        throw new Error;
+    }
+}
+export const getCollection = async (id) => {
+    try {
+        const response = await axios.get(`/api/collections/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            method: 'GET'
+        })
+        return response.data;
+    } catch (e) {
+        console.log('Error getting collection', e);
+        throw new Error;
+    }
+
+}
+export const editCollection = async (id, editedCollection) => {
+    try {
+        const response = await axios.put(`/api/collections/${id}/edit`, editedCollection, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.log("Error editing collection", error);
+        throw new Error;
+    }
+}
+export const addItem = async (id, newItem) => {
+    try {
+        const response = await axios.post(`/api/collections/${id}/items`, newItem, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.log('error adding new item', error);
+        throw new Error;
+    }
+}
+export const getItems = async (id) => {
+    try {
+        const response = await axios.get(`/api/collections/${id}/items`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            method: 'GET'
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error getting items', error);
+        throw new Error;
+    }
+}
+export const deleteItem = async (collectionId, itemId) => {
+    try {
+        const response = await axios.delete(`/api/collections/:${collectionId}/items/:${itemId}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error deleting item', error);
         throw new Error;
     }
 }

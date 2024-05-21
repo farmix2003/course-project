@@ -8,9 +8,11 @@ const Home = ({
   setCollections,
   isLoggedIn,
   isAdmin,
-  userInfo,
+  users,
+  setSingleCollection,
 }) => {
   const navigate = useNavigate();
+
   const handleDeleteCollection = async (id) => {
     try {
       await deleteCollection(id);
@@ -21,6 +23,7 @@ const Home = ({
       console.log("error", error);
     }
   };
+
   return (
     <div className="dark:text-white flex flex-col items-start gap-4 ml-5">
       {isLoggedIn ? (
@@ -46,6 +49,9 @@ const Home = ({
                 collection={collection}
                 handleDeleteCollection={handleDeleteCollection}
                 isAdmin={isAdmin}
+                users={users}
+                isLoggedIn={isLoggedIn}
+                setSingleCollection={setSingleCollection}
               />
             </div>
           ))

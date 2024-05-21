@@ -4,6 +4,7 @@ import { DarkMode, LightMode, Login, Logout } from "@mui/icons-material";
 import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../server/server";
+import useUserInfo from "../server/userInfo";
 const Navbar = ({
   handleThemeChange,
   theme,
@@ -12,9 +13,10 @@ const Navbar = ({
   isAdmin,
 }) => {
   const navigate = useNavigate();
-
+  // const { logout } = useUserInfo();
   const handleLogout = async () => {
     await logoutUser();
+    // logout();
     setIsLoggedIn(false);
     navigate("/");
   };

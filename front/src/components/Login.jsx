@@ -20,7 +20,7 @@ const Login = ({ setIsLoggedIn, setUserInfo }) => {
       window.localStorage.setItem("userId", userId);
       // console.log(token);
       setUserInfo(email);
-      setIsLoggedIn(true);
+      setIsLoggedIn(() => true);
     } catch (e) {
       if (e.response) {
         if (e.status === 403) {

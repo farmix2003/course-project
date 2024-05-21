@@ -9,6 +9,10 @@ import { useTranslation } from "react-i18next";
 import { createCollection, getCollections, getAllUsers } from "./server/server";
 import ItemForm from "./components/ItemForm";
 import CollectionForm from "./components/CollectionForm";
+import EditCollection from "./components/EditCollection";
+import CollectionItemCard from "./components/CollectionItemCard";
+import AddNewItem from "./components/AddNewItem";
+import CollectionCard from "./components/CollectionCard";
 function App() {
   const [theme, setTheme] = useState("light");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,7 +20,7 @@ function App() {
   const [userInfo, setUserInfo] = useState("");
   const [collections, setCollections] = useState([]);
   const [items, setItems] = useState([]);
-
+  const [singleCollection, setSingleCollection] = useState([]);
   const customFields = [
     { name: "Custom Field 1", type: "text" },
     { name: "Custom Field 2", type: "number" },
@@ -86,7 +90,7 @@ function App() {
   let isAdmin = users.find(
     (user) => user.email === userInfo && user.role === "admin"
   );
-  console.log(isAdmin);
+
   return (
     <div className="dark:bg-[#110022] min-h-screen w-screen overflow-y-scroll overflow-x-hidden">
       <Navbar
@@ -108,6 +112,8 @@ function App() {
               isLoggedIn={isLoggedIn}
               isAdmin={isAdmin}
               userInfo={userInfo}
+              users={users}
+              setSingleCollection={setSingleCollection}
             />
           }
         />
@@ -139,6 +145,16 @@ function App() {
               customFields={customFields}
             />
           }
+        />
+        <Route path="/collection/card" element={<CollectionCard />} />
+        <Route
+          path="/collections/item/:id"
+          element={<CollectionItemCard singleCollection={singleCollection} />}
+        />
+        <Route path="/edit-collection" element={<EditCollection />} />
+        <Route
+          path="/collection/add-item"
+          element={<AddNewItem singleCollection={singleCollection} />}
         />
       </Routes>
     </div>
