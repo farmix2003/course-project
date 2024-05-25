@@ -7,6 +7,7 @@ const ToolBar = ({
   handleUnblockUser,
   handleAddAdmin,
   handleRemoveAdmin,
+  t,
 }) => {
   //   const areUsersBlocked = users.every((user) => user.status === "blocked");
   //   console.log(areUsersBlocked);
@@ -35,13 +36,13 @@ const ToolBar = ({
           onClick={handleAddAdmin}
           className=" bg-yellow-500 px-3 py-1 text-white font-bold rounded"
         >
-          Add Admin
+          {t("addAdmin")}
         </button>
         <button
           onClick={handleRemoveAdmin}
           className=" bg-rose-900 px-3 py-1 text-white font-bold rounded"
         >
-          Remove Admin
+          {t("removeAdmin")}
         </button>
       </>
     </div>

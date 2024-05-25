@@ -9,7 +9,7 @@ import {
   unblockUsers,
 } from "../server/server";
 
-function AdminPanel({ users, user, setUsers }) {
+function AdminPanel({ users, user, setUsers, t }) {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectAllUsers, setSelectAllUsers] = useState(false);
 
@@ -95,15 +95,18 @@ function AdminPanel({ users, user, setUsers }) {
   );
   return (
     <div className="bg-gray-600/30 dark:bg-gray-500/30 p-2 mt-10 rounded-md h-[400px] w-[95%] md:w-[80%] ml-[10px] md:ml-[100px]">
-      <ToolBar
-        handleDeleteUser={handleDeleteUser}
-        handleBlockUsers={handleBlockUsers}
-        handleUnblockUser={handleUnblockUser}
-        handleAddAdmin={handleAddAdmin}
-        handleRemoveAdmin={handleRemoveAdmin}
-        users={users}
-        isAdminBlocked={isAdminBlocked}
-      />
+      {isAdmin && (
+        <ToolBar
+          handleDeleteUser={handleDeleteUser}
+          handleBlockUsers={handleBlockUsers}
+          handleUnblockUser={handleUnblockUser}
+          handleAddAdmin={handleAddAdmin}
+          handleRemoveAdmin={handleRemoveAdmin}
+          users={users}
+          isAdminBlocked={isAdminBlocked}
+          t={t}
+        />
+      )}
       <table>
         <thead>
           <tr>

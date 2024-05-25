@@ -27,6 +27,7 @@ function CollectionForm({ onCreateCollection }) {
     setCategory("");
     setImage("");
     customFields.values("");
+    navigate("/");
   };
 
   return (

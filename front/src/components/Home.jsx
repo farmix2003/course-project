@@ -10,6 +10,9 @@ const Home = ({
   isAdmin,
   users,
   setSingleCollection,
+  handleOpenEditCollection,
+  setCollectionData,
+  t,
 }) => {
   const navigate = useNavigate();
 
@@ -25,20 +28,13 @@ const Home = ({
   };
 
   return (
-    <div className="dark:text-white flex flex-col items-start gap-4 ml-5">
-      {isLoggedIn ? (
+    <div className="dark:text-white flex flex-col items-start gap-4 ml-5 p-5">
+      {isLoggedIn && (
         <button
           onClick={() => navigate("/create-collection")}
-          className="dark:text-white my-5"
+          className="mt-5 bg-[#A0AECD] dark:bg-red-500/30 rounded p-1 dark:text-white font-semibold text-[20px]"
         >
-          Create collection
-        </button>
-      ) : (
-        <button
-          onClick={() => navigate("/login")}
-          className="dark:text-white my-5"
-        >
-          Create collection
+          {t("createCollection")}
         </button>
       )}
       <div className="flex flex-wrap gap-2">
@@ -46,12 +42,15 @@ const Home = ({
           collections.map((collection) => (
             <div key={collection._id} className="">
               <CollectionCard
+                t={t}
                 collection={collection}
                 handleDeleteCollection={handleDeleteCollection}
                 isAdmin={isAdmin}
                 users={users}
                 isLoggedIn={isLoggedIn}
+                setCollectionData={setCollectionData}
                 setSingleCollection={setSingleCollection}
+                handleOpenEditCollection={handleOpenEditCollection}
               />
             </div>
           ))

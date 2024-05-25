@@ -4,14 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { editCollection } from "../server/server";
 import { useState } from "react";
 
-const EditCollection = ({
-  setCollectionData,
-  collectionData,
-  setIsEditing,
-}) => {
+const EditCollection = ({ setCollectionData, collectionData, t }) => {
   const [formData, setFormData] = useState(collectionData);
   console.log(formData);
-
+  const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -33,17 +29,16 @@ const EditCollection = ({
     e.preventDefault();
     try {
       const response = await editCollection(collectionData._id, formData);
-      console.log(response);
-      console.log(FormData);
-      setCollectionData(response);
+
+      navigate("/");
     } catch (e) {
       console.log("Error while updating collection", e);
     }
   };
 
   return (
-    <div className="absolute w-[40%] flex flex-col justify-center items-center dark:bg-gray-800 p-10 my-[-200px] mx-[60px]">
-      <h1>Edit Collection</h1>
+    <div className="w-[40%] mx-auto mt-10 rounded dark:text-white flex flex-col justify-center items-center bg-[#A0AECD] dark:bg-gray-800 p-10">
+      <h1 className="text-[30px] my-2">{t("editCollection")}</h1>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col w-[80%] items-start justify-center gap-2"
@@ -56,7 +51,7 @@ const EditCollection = ({
             value={formData?.title}
             onChange={handleInputChange}
             required
-            className="bg-transparent outline-none border-b-2 dark:border-white"
+            className="bg-transparent outline-none border-b-2 border-black dark:border-white"
           />
         </div>
         <div className="flex gap-2 w-[100%] justify-between  items-center">
@@ -67,7 +62,7 @@ const EditCollection = ({
             onChange={handleInputChange}
             rows={2}
             cols={22}
-            className="bg-transparent outline-none border-b-2 dark:border-white"
+            className="bg-transparent outline-none border-b-2 border-black dark:border-white"
           />
         </div>
         <div className="flex gap-2 w-[100%] justify-between items-center">
@@ -77,7 +72,7 @@ const EditCollection = ({
             name="category"
             value={formData.category}
             onChange={handleInputChange}
-            className="bg-transparent outline-none border-b-2 dark:border-white"
+            className="bg-transparent outline-none border-b-2 border-black dark:border-white"
           />
         </div>
         <div className="flex gap-2 w-[100%] justify-between items-center">
@@ -87,7 +82,7 @@ const EditCollection = ({
             name="image"
             value={formData?.image}
             onChange={handleInputChange}
-            className="bg-transparent outline-none border-b-2 dark:border-white"
+            className="bg-transparent outline-none border-b-2 border-black dark:border-white"
           />
         </div>
         {formData?.customFields?.map((field, index) => (
@@ -98,25 +93,25 @@ const EditCollection = ({
             <label>Customized Field:</label>
             <input
               type="text"
-              value={field.value}
+              value={field.name}
               onChange={(e) => handleCustomeFieldChange(index, e.target.value)}
-              className="bg-transparent outline-none border-b-2 dark:border-white"
+              className="bg-transparent outline-none border-b-2 border-black dark:border-white"
             />
           </div>
         ))}
         <div className="flex mt-3 gap-2 justify-around w-[100%]">
           <button
             type="submit"
-            className="w-full mt-5 bg-gray-50/30 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
+            className="w-full mt-5 bg-green-500 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
           >
-            Save Changes
+            {t("saveChanges")}
           </button>
           <button
             type="button"
-            className="w-full mt-5 bg-gray-50/30 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
-            onClick={() => setIsEditing(false)}
+            className="w-full mt-5 bg-red-500 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
+            onClick={() => navigate("/")}
           >
-            Cancel
+            {t("cancelEdit")}
           </button>
         </div>
       </form>

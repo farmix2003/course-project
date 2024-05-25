@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import { useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import EditCollection from "./components/EditCollection";
 import CollectionItemCard from "./components/CollectionItemCard";
 import AddNewItem from "./components/AddNewItem";
 import CollectionCard from "./components/CollectionCard";
+import EditCollectionItem from "./components/EditCollectionItem";
+import SearchBar from "./components/SearchBar";
 function App() {
   const [theme, setTheme] = useState("light");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,13 +23,20 @@ function App() {
   const [collections, setCollections] = useState([]);
   const [items, setItems] = useState([]);
   const [singleCollection, setSingleCollection] = useState([]);
+  const [singleCollectionItem, setSingleCollectionItem] = useState([]);
+  const [collectionData, setCollectionData] = useState([]);
+
+  const navigate = useNavigate();
   const customFields = [
     { name: "Custom Field 1", type: "text" },
     { name: "Custom Field 2", type: "number" },
     { name: "Custom Field 3", type: "date" },
   ];
-
-  const t = useTranslation();
+  const { t, i18n } = useTranslation();
+  const languages = [
+    { code: "en", name: "English" },
+    { code: "uz", name: "Uzbek" },
+  ];
   useEffect(() => {
     if (theme === "light") {
       document.documentElement.classList.add("dark");
@@ -67,6 +76,7 @@ function App() {
         image,
         customFields
       );
+      // setIsLoggedIn(true);
       return response;
     } catch (error) {
       console.log("Error creating collection", error);
@@ -78,6 +88,7 @@ function App() {
       try {
         const response = await getCollections();
         setCollections(response);
+        // setIsLoggedIn(true);
       } catch (error) {
         console.log("Error getting collections", error);
       }
@@ -87,14 +98,23 @@ function App() {
   const handleCreateItem = (newItem) => {
     setItems([...items, newItem]);
   };
+  const handleOpenEditCollection = (collection) => {
+    setCollectionData(collection);
+    navigate("/edit-collection");
+  };
   let isAdmin = users.find(
     (user) => user.email === userInfo && user.role === "admin"
   );
-
+  const handleOpenEditItem = (items) => {
+    setSingleCollectionItem(items);
+    navigate("/collection/edit-item");
+  };
   return (
-    <div className="dark:bg-[#110022] min-h-screen w-screen overflow-y-scroll overflow-x-hidden">
+    <div className="dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-scroll md:overflow-x-hidden">
       <Navbar
         t={t}
+        i18n={i18n}
+        languages={languages}
         handleThemeChange={handleThemeChange}
         theme={theme}
         isLoggedIn={isLoggedIn}
@@ -102,18 +122,24 @@ function App() {
         userInfo={userInfo}
         isAdmin={isAdmin}
       />
+      <div className="block md:hidden w-[100%] ml-5 mt-2">
+        <SearchBar />
+      </div>
       <Routes>
         <Route
           path="/"
           element={
             <Home
+              t={t}
               collections={collections}
               setCollections={setCollections}
               isLoggedIn={isLoggedIn}
               isAdmin={isAdmin}
               userInfo={userInfo}
               users={users}
+              setCollectionData={setCollectionData}
               setSingleCollection={setSingleCollection}
+              handleOpenEditCollection={handleOpenEditCollection}
             />
           }
         />
@@ -121,14 +147,23 @@ function App() {
         <Route
           path="/login"
           element={
-            <Login setIsLoggedIn={setIsLoggedIn} setUserInfo={setUserInfo} />
+            <Login
+              setIsLoggedIn={setIsLoggedIn}
+              setUserInfo={setUserInfo}
+              t={t}
+            />
           }
         />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register t={t} />} />
         <Route
           path="/admin"
           element={
-            <AdminPanel users={users} user={userInfo} setUsers={setUsers} />
+            <AdminPanel
+              t={t}
+              users={users}
+              user={userInfo}
+              setUsers={setUsers}
+            />
           }
         />
         <Route
@@ -149,12 +184,37 @@ function App() {
         <Route path="/collection/card" element={<CollectionCard />} />
         <Route
           path="/collections/item/:id"
-          element={<CollectionItemCard singleCollection={singleCollection} />}
+          element={
+            <CollectionItemCard
+              singleCollection={singleCollection}
+              t={t}
+              handleOpenEditItem={handleOpenEditItem}
+            />
+          }
         />
-        <Route path="/edit-collection" element={<EditCollection />} />
+        <Route
+          path="/edit-collection"
+          element={
+            <EditCollection
+              collectionData={collectionData}
+              setCollectionData={setCollectionData}
+              t={t}
+            />
+          }
+        />
         <Route
           path="/collection/add-item"
-          element={<AddNewItem singleCollection={singleCollection} />}
+          element={<AddNewItem singleCollection={singleCollection} t={t} />}
+        />
+        <Route
+          path="/collection/edit-item"
+          element={
+            <EditCollectionItem
+              singleCollection={singleCollection}
+              singleCollectionItem={singleCollectionItem}
+              t={t}
+            />
+          }
         />
       </Routes>
     </div>

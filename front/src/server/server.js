@@ -246,7 +246,7 @@ export const getItems = async (id) => {
 }
 export const deleteItem = async (collectionId, itemId) => {
     try {
-        const response = await axios.delete(`/api/collections/:${collectionId}/items/:${itemId}`, {
+        const response = await axios.delete(`/api/collections/${collectionId}/items/${itemId}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             }
@@ -254,6 +254,63 @@ export const deleteItem = async (collectionId, itemId) => {
         return response.data;
     } catch (error) {
         console.log('Error deleting item', error);
+        throw new Error;
+    }
+}
+export const editCollectionItem = async (collectionId, itemId, editedItems) => {
+    try {
+        const response = await axios.put(`/api/collections/${collectionId}/items/${itemId}`, editedItems, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error editing item', error);
+        throw new Error;
+    }
+}
+export const getTags = async (value) => {
+    try {
+        const response = await axios.get(`/api/tags?prefix=${value}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            method: 'GET'
+        })
+        return response.data;
+    } catch (error) {
+        console.log('Error getting tags', error);
+        throw new Error;
+    }
+}
+export const addComment = async (collectionId, itemId, text) => {
+    try {
+        const response = await axios.post(`/api/collections/${collectionId}/items/${itemId}/comments`,
+            { text },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            }
+        )
+        return response.data;
+    } catch (error) {
+        console.log('Error adding comment', error);
+        throw new Error;
+    }
+}
+export const getComments = async (collectionId, itemId) => {
+    try {
+        const response = await axios.get(`/api/collections/${collectionId}/items/${itemId}/comments`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            },
+            method: 'GET'
+        })
+        return response.data;
+    } catch (error) {
+        console.log('Error getting comments', error);
         throw new Error;
     }
 }

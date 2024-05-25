@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../server/server";
 
-const Login = () => {
+const Login = ({ t }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -69,13 +70,13 @@ const Login = () => {
           type="submit"
           className="w-full mt-5 bg-gray-50/30 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
         >
-          Register
+          {t("register")}
         </button>
         <span
           onClick={() => navigate("/login")}
           className="text-[17px] font-serif dark:text-white cursor-pointer"
         >
-          You have an account?
+          {t("registerMsg")}
         </span>
       </form>
     </div>
@@ -83,4 +84,3 @@ const Login = () => {
 };
 
 export default Login;
-Login;

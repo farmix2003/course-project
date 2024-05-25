@@ -54,7 +54,11 @@ const collectionItemsSchema = new mongoose.Schema({
         name: String,
         value: mongoose.Schema.Types.Mixed
     }],
-    comments: [{ type: String }],
+    comments: [{
+        userId: String,
+        text: String,
+        createdAt: { type: Date, default: Date.now }
+    }],
     likes: [{ type: String }],
     collectionId: { type: mongoose.Schema.ObjectId, ref: 'Collection' },
     last_updated: { type: Date, default: Date.now },
@@ -418,13 +422,14 @@ router.delete('/api/collections/:collectionId/items/:itemId', authenticateToken,
     try {
         const { collectionId, itemId } = req.params;
 
+        console.log("Delete request parameters:", { collectionId, itemId });
+
         const collection = await Collection.findById(collectionId);
         if (!collection) {
             return res.status(404).json({ success: false, message: 'Collection not found' });
         }
 
         const deletedItem = await CollectionItems.findOneAndDelete({ _id: itemId, collectionId });
-
         if (!deletedItem) {
             return res.status(404).json({ success: false, message: 'Collection item not found' });
         }
@@ -451,15 +456,34 @@ router.post('/api/collections/:collectionId/items/:itemId/comments', authenticat
         if (!item) {
             return res.status(404).json({ success: false, message: 'Collection item not found' });
         }
-        item.comments.push({ userId, text, date: new Date() });
-        await item.save();
 
+        item.comments.push({ userId, text, createdAt: new Date() });
+        await item.save();
+        console.log("added comment: ", userId, text);
         res.status(200).json({ success: true, message: 'Comment added successfully', item });
     } catch (error) {
         console.error('Error adding comment:', error);
         res.status(500).json({ success: false, message: 'Failed to add comment' });
     }
 });
+
+router.get('/api/collections/:collectionId/items/:itemId/comments', authenticateToken, authorizeCollectionAccess, async (req, res) => {
+    try {
+        const { collectionId, itemId } = req.params;
+        const collection = await Collection.findById(collectionId);
+        if (!collection) {
+            return res.status(404).json({ success: false, message: 'Collection not found' });
+        }
+        const item = await CollectionItems.findById(itemId);
+        if (!item) {
+            return res.status(404).json({ success: false, message: 'Collection item not found' });
+        }
+        res.status(200).json({ success: true, comments: item.comments });
+    } catch (err) {
+        console.error('Error getting comments:', err);
+        res.status(500).json({ success: false, message: 'Failed to get comments' });
+    }
+})
 
 router.post('/api/collections/:collectionId/items/:itemId/like', authenticateToken, async (req, res) => {
     try {
@@ -488,6 +512,22 @@ router.post('/api/collections/:collectionId/items/:itemId/like', authenticateTok
     }
 });
 
+router.get('/api/tags', async (req, res) => {
+    const { prefix } = req.query;
+    try {
+        const tags = await CollectionItems.aggregate([
+            { $unwind: "$tags" },
+            { $match: { tags: { $regex: `#^${prefix}`, $options: 'i' } } },
+            { $group: { _id: null, tags: { $addToSet: "$tags" } } },
+            { $project: { _id: 0, tags: 1 } }
+        ]);
+
+        res.status(200).json(tags.length > 0 ? tags[0].tags : []);
+    } catch (error) {
+        console.error('Error fetching tags:', error);
+        res.status(500).json({ message: 'Failed to fetch tags' });
+    }
+});
 
 
 // Root route

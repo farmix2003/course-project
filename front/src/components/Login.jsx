@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../server/server";
 
-const Login = ({ setIsLoggedIn, setUserInfo }) => {
+const Login = ({ setIsLoggedIn, setUserInfo, t }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ const Login = ({ setIsLoggedIn, setUserInfo }) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-[80%]">
+    <div className="flex justify-center items-center h-[80%] mt-10">
       <form
         onSubmit={handleLogin}
         className=" w-[85%] md:w-[40%] h-[60%] flex flex-col bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
@@ -69,13 +69,13 @@ const Login = ({ setIsLoggedIn, setUserInfo }) => {
           type="submit"
           className="w-full mt-5 bg-gray-50/30 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
         >
-          Login
+          {t("login")}
         </button>
         <span
           onClick={() => navigate("/register")}
           className="text-[17px] font-serif dark:text-white cursor-pointer"
         >
-          You do not have an account?
+          {t("loginMsg")}
         </span>
       </form>
     </div>

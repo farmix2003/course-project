@@ -4,16 +4,20 @@ import { DarkMode, LightMode, Login, Logout } from "@mui/icons-material";
 import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../server/server";
-import useUserInfo from "../server/userInfo";
+// import useUserInfo from "../server/userInfo";
+
 const Navbar = ({
   handleThemeChange,
   theme,
   isLoggedIn,
   setIsLoggedIn,
   isAdmin,
+  languages,
+  i18n,
+  t,
 }) => {
   const navigate = useNavigate();
-  // const { logout } = useUserInfo();
+
   const handleLogout = async () => {
     await logoutUser();
     // logout();
@@ -21,37 +25,54 @@ const Navbar = ({
     navigate("/");
   };
 
+  const handleLanguageChange = (event) => {
+    const selectedLanguage = event.target.value;
+    i18n.changeLanguage(selectedLanguage);
+  };
+
   return (
-    <div className="h-[60px] w-screen p-1 md:p-5 bg-[#A0AECD] flex border-white justify-between items-center dark:bg-gray-600/10 dark:text-white">
+    <div className="h-[60px] w-screen p-3 md:p-5 bg-[#A0AECD] flex border-white justify-between items-center dark:bg-gray-600/10 dark:text-white">
       <div>
         <h1
           onClick={() => navigate("/")}
-          className=" text-xl md:text-3xl font-bold cursor-pointer  dark:text-gray-200 "
+          className=" text-xl md:text-3xl font-bold cursor-pointer dark:text-gray-200 "
         >
-          Home
+          {t("home")}
         </h1>
       </div>
-
-      <SearchBar />
-
+      <div className="hidden md:block">
+        {" "}
+        <SearchBar />
+      </div>
       <div className="flex justify-between items-center">
         {isLoggedIn && isAdmin && (
           <button
-            className="hidden md:flex dark:text-white font-semibold"
+            className=" md:flex dark:text-white font-semibold"
             onClick={() => navigate("/admin")}
           >
             Admin
           </button>
         )}
         <button
-          className="border rounded text-[12px] md:text-[18px] border-black dark:text-white dark:border-white ml-2 mr-2 md:ml-4 md:mr-7 p-1 text-[#110022] "
+          className="border rounded text-[12px] md:text-[18px] border-black dark:text-white dark:border-white ml-2 mr-2 md:ml-4 md:mr-7 p-1 text-[#110022]"
           onClick={handleThemeChange}
         >
           {theme === "light" ? <LightMode /> : <DarkMode />}
         </button>
-        <select className="bg-transparent mr-1 md:mr-5 dark:border-white border border-black outline-none rounded">
-          <option className="text-black text-[10px] md:text-[17px]">ENG</option>
-          <option className="text-black text-[10px] md:text-[17px]">UZB</option>
+        <select
+          className="bg-transparent mr-1 md:mr-5 dark:border-white border border-black outline-none rounded"
+          onChange={handleLanguageChange}
+          value={i18n.language}
+        >
+          {languages.map((lang) => (
+            <option
+              key={lang.code}
+              value={lang.code}
+              className="text-black text-[10px] md:text-[17px]"
+            >
+              {lang.name}
+            </option>
+          ))}
         </select>
         {isLoggedIn ? (
           <Logout sx={{ cursor: "pointer" }} onClick={handleLogout} />

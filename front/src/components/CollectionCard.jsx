@@ -1,21 +1,20 @@
 import { Delete, Edit, Visibility } from "@mui/icons-material";
-import { useState } from "react";
+
 import useUserInfo from "../server/userInfo";
 import { getCollection } from "../server/server";
-import EditCollection from "./EditCollection";
 import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 const CollectionCard = ({
   collection,
   handleDeleteCollection,
+  handleOpenEditCollection,
   isLoggedIn,
   setSingleCollection,
+  setCollectionData,
 }) => {
   const navigate = useNavigate();
   const { userInfo } = useUserInfo();
-  const [collectionData, setCollectionData] = useState(collection);
-  const [isEdititng, setIsEditing] = useState();
 
   const canEditOrRemove =
     isLoggedIn &&
@@ -33,48 +32,44 @@ const CollectionCard = ({
     }
   };
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
   return (
-    <div className="w-[200px] h-[200px] border border-red-400 flex flex-col items-start justify-evenly">
-      <h1>{collection.title}</h1>
+    <div className="flex items-center bg-[#A0AECD] dark:bg-gray-500/20 rounded ">
+      <div className="w-[300px] rounded h-[300px] p-2  flex flex-col items-start justify-evenly">
+        <h1 className="bg-gray-50/20 dark:bg-slate-400/20 w-full p-1 text-[20px] rounded">
+          {collection.title}
+        </h1>
 
-      <b>{collection.description}</b>
-      <span>{collection.category}</span>
-      {collection?.customFields?.map((field) => (
-        <div key={field._id}>
-          <span>{field.name}</span>
-        </div>
-      ))}
+        <i className="bg-gray-50/20 dark:bg-slate-400/20 w-full p-1 text-[15px] rounded">
+          {collection.description}
+        </i>
+        <u className="bg-gray-50/20 dark:bg-slate-400/20 w-full p-1 text-[15px] rounded">
+          {collection.category}
+        </u>
 
-      <div>
-        <button>
-          <Visibility
-            onClick={() => getSingleCollection(collection._id, collection)}
-          />
-        </button>
-        {canEditOrRemove && (
-          <>
-            <button onClick={() => handleDeleteCollection(collection._id)}>
-              <Delete />
-            </button>
-            <button onClick={() => handleEditClick(true)}>
-              <Edit />
-            </button>
-          </>
-        )}
-      </div>
-      {isEdititng && (
         <div>
-          <EditCollection
-            collectionData={collectionData}
-            setCollectionData={setCollectionData}
-            setIsEditing={setIsEditing}
-          />
+          <button className="text-green-600 text-[20px]">
+            <Visibility
+              onClick={() => getSingleCollection(collection._id, collection)}
+            />
+          </button>
+          {canEditOrRemove && (
+            <>
+              <button
+                className="text-red-600"
+                onClick={() => handleDeleteCollection(collection._id)}
+              >
+                <Delete />
+              </button>
+              <button
+                className=" text-teal-700"
+                onClick={() => handleOpenEditCollection(collection)}
+              >
+                <Edit />
+              </button>
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
