@@ -3,7 +3,13 @@
 import { Comment, Delete, Edit, Favorite } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addComment, deleteItem, getItems } from "../server/server";
+import {
+  addComment,
+  deleteItem,
+  getItems,
+  likeItem,
+  unlikeItem,
+} from "../server/server";
 import useUserInfo from "../server/userInfo";
 import CommentsCard from "./CommentsCard";
 const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
@@ -56,56 +62,88 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
       throw new Error();
     }
   };
+  const handleLike = async (item) => {
+    try {
+      if (item.likes.includes(userInfo.id)) {
+        await unlikeItem(singleCollection._id, item._id);
+        item.likes = item.likes.filter((id) => id !== userInfo._id);
+      } else {
+        await likeItem(singleCollection._id, item._id);
+        item.likes.push(userInfo.id);
+      }
+      setCollectionItems([...collectionItems]);
+    } catch (error) {
+      console.error("Error updating like status", error);
+    }
+  };
   return (
-    <div className="dark:text-white bg-gray-500/20 mt-3 w-[95%] rounded-md mx-auto flex flex-col gap-2 p-10">
+    <div className="dark:text-white overflow-hidden bg-gray-500/20 mt-3 w-[90%] mb-10 rounded-md mx-auto flex flex-col gap-2 p-10">
       <h1 className="text-[30px] font-semibold">{singleCollection.title}</h1>
       <h2 className="text-[20px] font-semibold">{t("colletionItems")}</h2>
       {collectionItems.length > 0 ? (
         collectionItems?.map((item) => (
           <div
             key={item._id}
-            className="flex gap-10 bg-[#A0AECD] mt-2 dark:bg-gray-500/20 p-2 rounded"
+            className="flex  bg-[#A0AECD] justify-between mt-2 dark:bg-gray-500/20 p-2 rounded"
           >
-            <h5>{item.title}</h5>
-            {item?.customFields?.map((item, idx) => (
-              <b key={idx}>{item.value}</b>
-            ))}
-            <span>{item.tags}</span>
-            <div>
-              <Comment
-                sx={{ cursor: "pointer" }}
-                onClick={() => handleCommentClick(item._id)}
-              />
-              <button className="dark:text-red-600 text-white">
-                <Favorite />
-              </button>
-              {activeCommentItemId === item._id && (
-                <div>
-                  <input
-                    className="bg-transparent outline-none border-b-2 border-black dark:border-white"
-                    type="text"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                  />
-                  <div className="flex gap-2">
-                    <button
-                      className="text-green-700 font-semibold"
-                      onClick={() => handleSubmit(item._id)}
-                    >
-                      {t("add")}
-                    </button>
-                    <button
-                      className="text-red-600 font-semibold"
-                      onClick={() => setActiveCommentItemId(null)}
-                    >
-                      {t("cancelEdit")}
-                    </button>
-                  </div>
-                </div>
-              )}
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-4 flex-wrap w-3/1">
+                <h5>{item.title}</h5>
+                {item?.customFields?.map((item, idx) => (
+                  <b key={idx}>
+                    {" "}
+                    <span className="font-normal">by</span> {item.value}
+                  </b>
+                ))}
+              </div>
+              <span>{item.tags}</span>
             </div>
             <div>
-              <CommentsCard item={item} singleCollection={singleCollection} />
+              <div className="flex flex-col">
+                <div className="flex gap-4 ">
+                  <Comment
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => handleCommentClick(item._id)}
+                  />
+                  <button
+                    onClick={() => handleLike(item)}
+                    style={{
+                      color: item.likes.includes(userInfo._id)
+                        ? "red"
+                        : "white",
+                    }}
+                  >
+                    <Favorite />
+                  </button>
+                </div>
+                {activeCommentItemId === item._id && (
+                  <div>
+                    <input
+                      className="bg-transparent outline-none border-b-2 border-black dark:border-white"
+                      type="text"
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        className="text-green-700 font-semibold"
+                        onClick={() => handleSubmit(item._id)}
+                      >
+                        {t("add")}
+                      </button>
+                      <button
+                        className="text-red-600 font-semibold"
+                        onClick={() => setActiveCommentItemId(null)}
+                      >
+                        {t("cancelEdit")}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div>
+                <CommentsCard item={item} singleCollection={singleCollection} />
+              </div>
             </div>
             <div>
               {(userInfo?.role === "admin" ||

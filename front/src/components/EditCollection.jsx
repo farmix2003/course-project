@@ -6,8 +6,8 @@ import { useState } from "react";
 
 const EditCollection = ({ setCollectionData, collectionData, t }) => {
   const [formData, setFormData] = useState(collectionData);
-  console.log(formData);
   const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -16,12 +16,19 @@ const EditCollection = ({ setCollectionData, collectionData, t }) => {
     }));
   };
 
-  const handleCustomeFieldChange = (index, value) => {
+  const handleCustomFieldChange = (index, name, value) => {
     const newCustomFields = [...formData.customFields];
-    newCustomFields[index].value = value;
+    newCustomFields[index] = { ...newCustomFields[index], [name]: value };
     setFormData((prevState) => ({
       ...prevState,
       customFields: newCustomFields,
+    }));
+  };
+
+  const addCustomField = () => {
+    setFormData((prevState) => ({
+      ...prevState,
+      customFields: [...prevState.customFields, { name: "", value: "" }],
     }));
   };
 
@@ -29,7 +36,6 @@ const EditCollection = ({ setCollectionData, collectionData, t }) => {
     e.preventDefault();
     try {
       const response = await editCollection(collectionData._id, formData);
-
       navigate("/");
     } catch (e) {
       console.log("Error while updating collection", e);
@@ -93,12 +99,22 @@ const EditCollection = ({ setCollectionData, collectionData, t }) => {
             <label>Customized Field:</label>
             <input
               type="text"
+              name="name"
               value={field.name}
-              onChange={(e) => handleCustomeFieldChange(index, e.target.value)}
+              onChange={(e) =>
+                handleCustomFieldChange(index, e.target.name, e.target.value)
+              }
               className="bg-transparent outline-none border-b-2 border-black dark:border-white"
             />
           </div>
         ))}
+        <button
+          type="button"
+          onClick={addCustomField}
+          className="mt-3 bg-blue-500 rounded p-1 text-white font-semibold"
+        >
+          Add Custom Field
+        </button>
         <div className="flex mt-3 gap-2 justify-around w-[100%]">
           <button
             type="submit"

@@ -467,7 +467,7 @@ router.post('/api/collections/:collectionId/items/:itemId/comments', authenticat
     }
 });
 
-router.get('/api/collections/:collectionId/items/:itemId/comments', authenticateToken, authorizeCollectionAccess, async (req, res) => {
+router.get('/api/collections/:collectionId/items/:itemId/comments', authenticateToken, async (req, res) => {
     try {
         const { collectionId, itemId } = req.params;
         const collection = await Collection.findById(collectionId);
@@ -488,7 +488,8 @@ router.get('/api/collections/:collectionId/items/:itemId/comments', authenticate
 router.post('/api/collections/:collectionId/items/:itemId/like', authenticateToken, async (req, res) => {
     try {
         const { collectionId, itemId } = req.params;
-        const userId = req.user.id
+        const userId = req.user.id;
+
         const collection = await Collection.findById(collectionId);
         if (!collection) {
             return res.status(404).json({ success: false, message: 'Collection not found' });
@@ -511,6 +512,36 @@ router.post('/api/collections/:collectionId/items/:itemId/like', authenticateTok
         res.status(500).json({ success: false, message: 'Failed to like collection item' });
     }
 });
+
+router.post('/api/collections/:collectionId/items/:itemId/unlike', authenticateToken, async (req, res) => {
+    try {
+        const { collectionId, itemId } = req.params;
+        const userId = req.user.id;
+
+        const collection = await Collection.findById(collectionId);
+        if (!collection) {
+            return res.status(404).json({ success: false, message: 'Collection not found' });
+        }
+
+        const item = await CollectionItems.findById(itemId);
+        if (!item) {
+            return res.status(404).json({ success: false, message: 'Collection item not found' });
+        }
+
+        if (!item.likes.includes(userId)) {
+            return res.status(400).json({ success: false, message: 'Item not liked by the user' });
+        }
+        item.likes = item.likes.filter(id => id !== userId);
+        await item.save();
+
+        res.status(200).json({ success: true, message: 'Item unliked successfully', item });
+    } catch (error) {
+        console.error('Error unliking collection item:', error);
+        res.status(500).json({ success: false, message: 'Failed to unlike collection item' });
+    }
+});
+
+
 
 router.get('/api/tags', async (req, res) => {
     const { prefix } = req.query;

@@ -314,3 +314,31 @@ export const getComments = async (collectionId, itemId) => {
         throw new Error;
     }
 }
+
+export const likeItem = async (collectionId, itemId) => {
+    try {
+        const response = await axios.post(`/api/collections/${collectionId}/items/${itemId}/like`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error liking item', error);
+        throw new Error();
+    }
+};
+
+export const unlikeItem = async (collectionId, itemId) => {
+    try {
+        const response = await axios.post(`/api/collections/${collectionId}/items/${itemId}/unlike`, {}, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.log('Error unliking item', error);
+        throw new Error();
+    }
+};

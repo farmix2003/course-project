@@ -80,15 +80,50 @@ const AddNewItem = ({ singleCollection, t }) => {
             <label htmlFor={`customField-${index}`} className="font-semibold">
               {field.name}:
             </label>
-            <input
-              type="text"
-              id={`customField-${index}`}
-              value={formData.customFieldValues[field.name]}
-              onChange={(e) =>
-                handleCustomFieldChange(field.name, e.target.value)
-              }
-              className="bg-transparent border-b-2 border-black dark:border-white outline-none"
-            />
+            {field.type === "boolean" ? (
+              <input
+                type="checkbox"
+                id={`customField-${index}`}
+                checked={formData.customFieldValues[field.name] === "true"}
+                onChange={(e) =>
+                  handleCustomFieldChange(
+                    field.name,
+                    e.target.checked.toString()
+                  )
+                }
+                className="bg-transparent border-b-2 border-black dark:border-white outline-none"
+              />
+            ) : field.type === "integer" ? (
+              <input
+                type="number"
+                id={`customField-${index}`}
+                value={formData.customFieldValues[field.name]}
+                onChange={(e) =>
+                  handleCustomFieldChange(field.name, e.target.value)
+                }
+                className="bg-transparent border-b-2 border-black dark:border-white outline-none"
+              />
+            ) : field.type === "date" ? (
+              <input
+                type="date"
+                id={`customField-${index}`}
+                value={formData.customFieldValues[field.name]}
+                onChange={(e) =>
+                  handleCustomFieldChange(field.name, e.target.value)
+                }
+                className="bg-transparent border-b-2 border-black dark:border-white outline-none"
+              />
+            ) : (
+              <input
+                type="text"
+                id={`customField-${index}`}
+                value={formData.customFieldValues[field.name]}
+                onChange={(e) =>
+                  handleCustomFieldChange(field.name, e.target.value)
+                }
+                className="bg-transparent border-b-2 border-black dark:border-white outline-none"
+              />
+            )}
           </div>
         ))}
         <div className="flex items-center justify-evenly m-2">

@@ -110,7 +110,7 @@ function App() {
     navigate("/collection/edit-item");
   };
   return (
-    <div className="dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-scroll md:overflow-x-hidden">
+    <div className="dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-hidden md:overflow-x-hidden">
       <Navbar
         t={t}
         i18n={i18n}

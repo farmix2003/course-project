@@ -107,19 +107,19 @@ function CollectionForm({ onCreateCollection }) {
           </div>
 
           {customFields.map((field, index) => (
-            <div key={index}>
-              <label className="">
-                Field Name:
-                <input
-                  className="m-2"
-                  type="text"
-                  value={field.name}
-                  onChange={(e) =>
-                    handleCustomFieldChange(index, "name", e.target.value)
-                  }
-                  placeholder="Field Name"
-                />
-              </label>
+            <div
+              key={index}
+              className="w-full flex items-center justify-start mt-2"
+            >
+              <input
+                className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
+                type="text"
+                value={field.name}
+                onChange={(e) =>
+                  handleCustomFieldChange(index, "name", e.target.value)
+                }
+                placeholder="Field Name"
+              />
             </div>
           ))}
         </div>
