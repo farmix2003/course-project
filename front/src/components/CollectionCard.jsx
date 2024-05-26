@@ -1,8 +1,6 @@
 import { Delete, Edit, Visibility } from "@mui/icons-material";
 
 import useUserInfo from "../server/userInfo";
-import { getCollection } from "../server/server";
-import { useNavigate } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
 const CollectionCard = ({
@@ -10,27 +8,12 @@ const CollectionCard = ({
   handleDeleteCollection,
   handleOpenEditCollection,
   isLoggedIn,
-  setSingleCollection,
-  setCollectionData,
+  getSingleCollection,
 }) => {
-  const navigate = useNavigate();
   const { userInfo } = useUserInfo();
-
   const canEditOrRemove =
     isLoggedIn &&
     (userInfo?.role === "admin" || userInfo?._id === collection?.user_id);
-
-  const getSingleCollection = async (id, collection) => {
-    try {
-      const response = await getCollection(id);
-      console.log(response);
-      setCollectionData(response);
-      setSingleCollection(collection);
-      navigate(`/collections/item/:${id}`);
-    } catch (e) {
-      console.log("Error while getting collection");
-    }
-  };
 
   return (
     <div className="flex items-center bg-[#A0AECD] dark:bg-gray-500/20 rounded ">

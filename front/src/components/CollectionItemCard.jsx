@@ -32,7 +32,7 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
     };
 
     getAllItems();
-  }, [singleCollection._id]);
+  }, [singleCollection?._id]);
 
   const handleDeleteCollectionItem = async (itemId) => {
     try {
@@ -46,7 +46,7 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
   };
 
   const handleCommentClick = (itemId) => {
-    setActiveCommentItemId((prevId) => (prevId === itemId ? null : itemId)); // Toggle the comment input
+    setActiveCommentItemId((prevId) => (prevId === itemId ? null : itemId));
   };
   const handleCancel = () => {
     navigate(`/`);
@@ -64,7 +64,7 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
   };
   const handleLike = async (item) => {
     try {
-      if (item.likes.includes(userInfo.id)) {
+      if (item.likes.includes(userInfo._id)) {
         await unlikeItem(singleCollection._id, item._id);
         item.likes = item.likes.filter((id) => id !== userInfo._id);
       } else {
@@ -78,7 +78,7 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
   };
   return (
     <div className="dark:text-white overflow-hidden bg-gray-500/20 mt-3 w-[90%] mb-10 rounded-md mx-auto flex flex-col gap-2 p-10">
-      <h1 className="text-[30px] font-semibold">{singleCollection.title}</h1>
+      <h1 className="text-[30px] font-semibold">{singleCollection?.title}</h1>
       <h2 className="text-[20px] font-semibold">{t("colletionItems")}</h2>
       {collectionItems.length > 0 ? (
         collectionItems?.map((item) => (
@@ -103,12 +103,12 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
                 <div className="flex gap-4 ">
                   <Comment
                     sx={{ cursor: "pointer" }}
-                    onClick={() => handleCommentClick(item._id)}
+                    onClick={() => handleCommentClick(item?._id)}
                   />
                   <button
                     onClick={() => handleLike(item)}
                     style={{
-                      color: item.likes.includes(userInfo._id)
+                      color: item.likes.includes(userInfo?._id)
                         ? "red"
                         : "white",
                     }}
@@ -167,7 +167,7 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
       )}
       <div>
         {(userInfo?.role === "admin" ||
-          userInfo?._id === singleCollection.user_id) && (
+          userInfo?._id === singleCollection?.user_id) && (
           <>
             <button
               onClick={() => navigate("/collection/add-item")}

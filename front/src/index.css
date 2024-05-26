@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scrollbar-width: none;
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -13,6 +17,7 @@ td {
   text-align: left;
   padding: 8px;
 }
-.scrollbar {
+.scrollbar,
+.app {
   scrollbar-width: none;
 }

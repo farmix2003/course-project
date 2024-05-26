@@ -6,7 +6,13 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import AdminPanel from "./components/AdminPanel";
 import { useTranslation } from "react-i18next";
-import { createCollection, getCollections, getAllUsers } from "./server/server";
+import {
+  createCollection,
+  getCollections,
+  getAllUsers,
+  getLatestItem,
+  getLargestCollections,
+} from "./server/server";
 import ItemForm from "./components/ItemForm";
 import CollectionForm from "./components/CollectionForm";
 import EditCollection from "./components/EditCollection";
@@ -25,7 +31,8 @@ function App() {
   const [singleCollection, setSingleCollection] = useState([]);
   const [singleCollectionItem, setSingleCollectionItem] = useState([]);
   const [collectionData, setCollectionData] = useState([]);
-
+  const [latestItem, setLatestItems] = useState([]);
+  const [topCollections, setTopCollections] = useState([]);
   const navigate = useNavigate();
   const customFields = [
     { name: "Custom Field 1", type: "text" },
@@ -37,6 +44,32 @@ function App() {
     { code: "en", name: "English" },
     { code: "uz", name: "Uzbek" },
   ];
+
+  useEffect(() => {
+    const getTopCollections = async () => {
+      try {
+        const response = await getLargestCollections();
+        setTopCollections(response.collections);
+      } catch (error) {
+        console.log("Error", error);
+        throw new Error();
+      }
+    };
+    getTopCollections();
+  }, []);
+
+  useEffect(() => {
+    const getLatestItems = async () => {
+      try {
+        const response = await getLatestItem();
+        setLatestItems(response);
+      } catch (error) {
+        console.log("Error: " + error);
+      }
+    };
+    getLatestItems();
+  }, []);
+
   useEffect(() => {
     if (theme === "light") {
       document.documentElement.classList.add("dark");
@@ -110,7 +143,7 @@ function App() {
     navigate("/collection/edit-item");
   };
   return (
-    <div className="dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-hidden md:overflow-x-hidden">
+    <div className="app bg-slate-100 dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-hidden md:overflow-x-hidden">
       <Navbar
         t={t}
         i18n={i18n}
@@ -140,6 +173,9 @@ function App() {
               setCollectionData={setCollectionData}
               setSingleCollection={setSingleCollection}
               handleOpenEditCollection={handleOpenEditCollection}
+              latestItems={latestItem}
+              topCollections={topCollections}
+              setLatestItems={setLatestItems}
             />
           }
         />

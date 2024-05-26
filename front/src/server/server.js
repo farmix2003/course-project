@@ -233,9 +233,7 @@ export const addItem = async (id, newItem) => {
 export const getItems = async (id) => {
     try {
         const response = await axios.get(`/api/collections/${id}/items`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
-            },
+
             method: 'GET'
         });
         return response.data;
@@ -314,7 +312,6 @@ export const getComments = async (collectionId, itemId) => {
         throw new Error;
     }
 }
-
 export const likeItem = async (collectionId, itemId) => {
     try {
         const response = await axios.post(`/api/collections/${collectionId}/items/${itemId}/like`, {}, {
@@ -328,7 +325,6 @@ export const likeItem = async (collectionId, itemId) => {
         throw new Error();
     }
 };
-
 export const unlikeItem = async (collectionId, itemId) => {
     try {
         const response = await axios.post(`/api/collections/${collectionId}/items/${itemId}/unlike`, {}, {
@@ -342,3 +338,21 @@ export const unlikeItem = async (collectionId, itemId) => {
         throw new Error();
     }
 };
+export const getLatestItem = async () => {
+    try {
+        const response = await axios.get('/api/latest-items')
+        return response.data;
+    } catch (error) {
+        console.log("Error getting latest item", error);
+        throw new Error;
+    }
+}
+export const getLargestCollections = async () => {
+    try {
+        const response = await axios.get('/api/top-collections')
+        return response.data
+    } catch (error) {
+        console.log('Error getting collections', error);
+        throw new Error;
+    }
+}

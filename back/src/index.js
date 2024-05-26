@@ -295,7 +295,7 @@ router.get('/api/collections', async (req, res) => {
     }
 });
 
-router.get('/api/collections/:collectionId', authenticateToken, async (req, res) => {
+router.get('/api/collections/:collectionId', async (req, res) => {
     try {
         const collection = await Collection.findById(req.params.collectionId);
         if (!collection) {
@@ -307,7 +307,6 @@ router.get('/api/collections/:collectionId', authenticateToken, async (req, res)
         res.status(500).json({ success: false, message: "Failed to fetch collection" });
     }
 });
-
 
 router.put('/api/collections/:collectionId/edit', authenticateToken, authorizeCollectionAccess, async (req, res) => {
     try {
@@ -372,7 +371,7 @@ router.post('/api/collections/:collectionId/items', authenticateToken, async (re
         res.status(500).json({ success: false, message: 'Failed to create collection item' });
     }
 });
-router.get('/api/collections/:collectionId/items', authenticateToken, async (req, res) => {
+router.get('/api/collections/:collectionId/items', async (req, res) => {
     const collectionId = req.params.collectionId;
     console.log('Collection ID:', collectionId);
     if (!mongoose.Types.ObjectId.isValid(collectionId)) {
@@ -538,6 +537,64 @@ router.post('/api/collections/:collectionId/items/:itemId/unlike', authenticateT
     } catch (error) {
         console.error('Error unliking collection item:', error);
         res.status(500).json({ success: false, message: 'Failed to unlike collection item' });
+    }
+});
+
+router.get('/api/latest-items', async (req, res) => {
+    try {
+        const latestItems = await CollectionItems.find()
+            .sort({ creation_date: -1 })
+            .limit(10)
+            .populate('collectionId', 'title');
+
+        const items = latestItems.map(item => {
+            const authorField = item.customFields.find(field => field.name === 'Author');
+            const author = authorField ? authorField.value : 'Unknown';
+
+            return {
+                name: item.title,
+                collection: item.collectionId.title,
+                author: author,
+                customFields: item.customFields,
+                collectionId: item.collectionId._id,
+            };
+        });
+
+        res.status(200).json(items);
+    } catch (error) {
+        console.error('Error fetching latest items:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch latest items' });
+    }
+});
+
+
+router.get('/api/top-collections', async (req, res) => {
+    try {
+        const topCollections = await Collection.aggregate([
+            {
+                $lookup: {
+                    from: 'collectionitems',
+                    localField: '_id',
+                    foreignField: 'collectionId',
+                    as: 'items'
+                }
+            },
+            {
+                $project: {
+                    title: 1,
+                    description: 1,
+                    category: 1,
+                    itemCount: { $size: '$items' }
+                }
+            },
+            { $sort: { itemCount: -1 } },
+            { $limit: 5 }
+        ]);
+
+        res.status(200).json({ success: true, collections: topCollections });
+    } catch (error) {
+        console.error('Error fetching top collections:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch top collections' });
     }
 });
 
