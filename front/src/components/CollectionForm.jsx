@@ -125,7 +125,7 @@ function CollectionForm({ onCreateCollection }) {
         </div>
         <div className="flex gap-2 h-[50%]">
           <button
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/")}
             className="w-full mt-5 bg-gray-50/30 dark:bg-blue-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
           >
             Home
