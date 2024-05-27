@@ -7,6 +7,7 @@ const Login = ({ t }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -18,6 +19,7 @@ const Login = ({ t }) => {
       return response.data;
     } catch (error) {
       console.log("error", error);
+      setError(error.message);
     }
   };
 
@@ -80,6 +82,9 @@ const Login = ({ t }) => {
           {t("registerMsg")}
         </span>
       </form>
+      {error && (
+        <div className="text-red-500 text-center font-semibold">{error}</div>
+      )}
     </div>
   );
 };

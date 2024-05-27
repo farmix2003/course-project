@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
     origin: 'https://course-project-front-one.vercel.app',
+    // origin: 'http://localhost:5173',
     credentials: true
 }));
 
@@ -40,10 +41,11 @@ const collectionSchema = new mongoose.Schema({
     image: String,
     user_id: String,
     customFields: [{
-        state: Boolean,
-        name: String
+        name: { type: String, required: true },
+        type: { type: String, required: true, enum: ['integer', 'string', 'multiline', 'boolean', 'date'] }
     }]
 });
+
 
 const collectionItemsSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -69,7 +71,6 @@ const User = mongoose.model('User', userSchema);
 const Collection = mongoose.model('Collection', collectionSchema);
 const CollectionItems = mongoose.model('CollectionItem', collectionItemsSchema);
 
-// Routes setup
 const router = express.Router();
 app.use(router);
 
@@ -101,7 +102,6 @@ const authorizeCollectionAccess = async (req, res, next) => {
 
 
 // User routes
-
 app.get('/api/users/profile', authenticateToken, async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
@@ -246,6 +246,16 @@ router.post('/api/collections', authenticateToken, async (req, res) => {
     try {
         const { title, description, category, image, customFields } = req.body;
         const user_id = req.user.id;
+
+        // Validate customFields
+        if (customFields && customFields.length > 0) {
+            for (const field of customFields) {
+                if (!field.name || !field.type || !['integer', 'string', 'multiline', 'boolean', 'date'].includes(field.type)) {
+                    return res.status(400).json({ success: false, message: 'Invalid custom field format' });
+                }
+            }
+        }
+
         const newCollection = new Collection({
             _id: new mongoose.Types.ObjectId(),
             title,
@@ -313,6 +323,15 @@ router.put('/api/collections/:collectionId/edit', authenticateToken, authorizeCo
         const collectionId = req.params.collectionId;
         const { title, description, category, image, customFields } = req.body;
 
+        // Validate customFields
+        if (customFields && customFields.length > 0) {
+            for (const field of customFields) {
+                if (!field.name || !field.type || !['integer', 'string', 'multiline', 'boolean', 'date'].includes(field.type)) {
+                    return res.status(400).json({ success: false, message: 'Invalid custom field format' });
+                }
+            }
+        }
+
         const collection = await Collection.findById(collectionId);
         if (!collection) {
             return res.status(404).json({ success: false, message: "Collection not found" });
@@ -337,8 +356,6 @@ router.post('/api/collections/:collectionId/items', authenticateToken, async (re
         const { title, tags, customFieldValues } = req.body;
         const collectionId = req.params.collectionId;
 
-        console.log("Request Body:", req.body);
-
         if (!title || !tags || !customFieldValues) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
@@ -350,6 +367,15 @@ router.post('/api/collections/:collectionId/items', authenticateToken, async (re
 
         const customFields = collection.customFields.map(field => {
             const value = customFieldValues[field.name];
+            if (field.type === 'integer' && !Number.isInteger(value)) {
+                throw new Error(`Invalid value for field: ${field.name}`);
+            }
+            if (field.type === 'boolean' && typeof value !== 'boolean') {
+                throw new Error(`Invalid value for field: ${field.name}`);
+            }
+            if (field.type === 'date' && isNaN(new Date(value).getTime())) {
+                throw new Error(`Invalid value for field: ${field.name}`);
+            }
             if (field.state && !value) {
                 throw new Error(`Missing required field: ${field.name}`);
             }
@@ -371,6 +397,7 @@ router.post('/api/collections/:collectionId/items', authenticateToken, async (re
         res.status(500).json({ success: false, message: 'Failed to create collection item' });
     }
 });
+
 router.get('/api/collections/:collectionId/items', async (req, res) => {
     const collectionId = req.params.collectionId;
     console.log('Collection ID:', collectionId);

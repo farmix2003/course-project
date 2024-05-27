@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addItem } from "../server/server"; // Ensure this function is defined
+import { addItem } from "../server/server";
 
 const AddNewItem = ({ singleCollection, t }) => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const AddNewItem = ({ singleCollection, t }) => {
     title: "",
     tags: "",
     customFieldValues: singleCollection?.customFields?.reduce((acc, field) => {
-      acc[field.name] = "";
+      acc[field.name] = field.type === "boolean" ? false : "";
       return acc;
     }, {}),
   });
@@ -59,6 +59,7 @@ const AddNewItem = ({ singleCollection, t }) => {
         <input
           type="text"
           name="title"
+          required
           value={formData.title}
           onChange={handleInputChange}
           className="bg-transparent border-b-2 border-black dark:border-white outline-none"
@@ -70,6 +71,7 @@ const AddNewItem = ({ singleCollection, t }) => {
           name="tags"
           id="tags"
           value={formData.tags}
+          required
           onChange={handleInputChange}
           placeholder="#tags"
           rows={1}
@@ -83,19 +85,18 @@ const AddNewItem = ({ singleCollection, t }) => {
             {field.type === "boolean" ? (
               <input
                 type="checkbox"
+                required
                 id={`customField-${index}`}
-                checked={formData.customFieldValues[field.name] === "true"}
+                checked={formData.customFieldValues[field.name]}
                 onChange={(e) =>
-                  handleCustomFieldChange(
-                    field.name,
-                    e.target.checked.toString()
-                  )
+                  handleCustomFieldChange(field.name, e.target.checked)
                 }
                 className="bg-transparent border-b-2 border-black dark:border-white outline-none"
               />
             ) : field.type === "integer" ? (
               <input
                 type="number"
+                required
                 id={`customField-${index}`}
                 value={formData.customFieldValues[field.name]}
                 onChange={(e) =>

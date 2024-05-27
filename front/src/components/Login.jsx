@@ -9,6 +9,7 @@ const Login = ({ setIsLoggedIn, setUserInfo, t }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -18,7 +19,6 @@ const Login = ({ setIsLoggedIn, setUserInfo, t }) => {
       const userId = response.userId;
       window.localStorage.setItem("token", token);
       window.localStorage.setItem("userId", userId);
-      // console.log(token);
       setUserInfo(email);
       setIsLoggedIn(() => true);
     } catch (e) {
@@ -29,14 +29,14 @@ const Login = ({ setIsLoggedIn, setUserInfo, t }) => {
           setError("Invalid email or password");
         }
       } else {
-        setError("Failed to login");
+        setError("Failed to login! User not found");
       }
     }
     console.log(email, password);
   };
 
   return (
-    <div className="flex justify-center items-center h-[80%] mt-10">
+    <div className="flex flex-col justify-center items-center h-[80%] mt-10">
       <form
         onSubmit={handleLogin}
         className=" w-[85%] md:w-[40%] h-[60%] flex flex-col bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
@@ -78,6 +78,11 @@ const Login = ({ setIsLoggedIn, setUserInfo, t }) => {
           {t("loginMsg")}
         </span>
       </form>
+      {error && (
+        <div>
+          <h1 className="mt-3 text-[1.3rem] text-red-800">{error}</h1>
+        </div>
+      )}
     </div>
   );
 };

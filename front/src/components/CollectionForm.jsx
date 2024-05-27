@@ -9,6 +9,7 @@ function CollectionForm({ onCreateCollection }) {
   const [image, setImage] = useState("");
   const [customFields, setCustomFields] = useState([]);
   const navigate = useNavigate();
+
   const handleAddCustomField = (type) => {
     const field = { name: "", type: type, value: "" };
     setCustomFields([...customFields, field]);
@@ -19,6 +20,7 @@ function CollectionForm({ onCreateCollection }) {
     updatedFields[index][field] = value;
     setCustomFields(updatedFields);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onCreateCollection(title, description, category, image, customFields);
@@ -26,7 +28,7 @@ function CollectionForm({ onCreateCollection }) {
     setDescription("");
     setCategory("");
     setImage("");
-    customFields.values("");
+    setCustomFields([]);
     navigate("/");
   };
 
@@ -34,10 +36,11 @@ function CollectionForm({ onCreateCollection }) {
     <div className="flex justify-center m-2 items-center min-h-[50%] md:min-h-[90%]">
       <form
         onSubmit={handleSubmit}
-        className=" w-[85%] md:w-[50%] h-[90%] md:h-[90%] gap-3 flex flex-col flex-wrap bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
+        className="w-[85%] md:w-[50%] h-[90%] md:h-[90%] gap-3 flex flex-col flex-wrap bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
       >
         <input
           type="text"
+          required
           className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -46,6 +49,7 @@ function CollectionForm({ onCreateCollection }) {
         <textarea
           cols={10}
           value={description}
+          required
           className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
@@ -54,6 +58,7 @@ function CollectionForm({ onCreateCollection }) {
           type="text"
           className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
           value={category}
+          required
           onChange={(e) => setCategory(e.target.value)}
           placeholder="Category"
         />
@@ -105,7 +110,6 @@ function CollectionForm({ onCreateCollection }) {
               Add Date Field
             </button>
           </div>
-
           {customFields.map((field, index) => (
             <div
               key={index}
@@ -115,10 +119,17 @@ function CollectionForm({ onCreateCollection }) {
                 className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
                 type="text"
                 value={field.name}
+                required
                 onChange={(e) =>
                   handleCustomFieldChange(index, "name", e.target.value)
                 }
                 placeholder="Field Name"
+              />
+              <input
+                className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
+                type="text"
+                value={field.type}
+                readOnly
               />
             </div>
           ))}

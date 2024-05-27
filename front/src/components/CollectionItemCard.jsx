@@ -105,7 +105,8 @@ const CollectionItemCard = ({
                 {item?.customFields?.map((item, idx) => (
                   <b key={idx}>
                     {" "}
-                    <span className="font-normal">by</span> {item.value}
+                    <span className="font-normal">{item.name}:</span>{" "}
+                    {item.value}
                   </b>
                 ))}
               </div>
