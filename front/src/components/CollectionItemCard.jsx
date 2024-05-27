@@ -12,7 +12,12 @@ import {
 } from "../server/server";
 import useUserInfo from "../server/userInfo";
 import CommentsCard from "./CommentsCard";
-const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
+const CollectionItemCard = ({
+  singleCollection,
+  t,
+  isLoggedIn,
+  handleOpenEditItem,
+}) => {
   const navigate = useNavigate();
   const [collectionItems, setCollectionItems] = useState([]);
   const { userInfo } = useUserInfo();
@@ -46,7 +51,11 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
   };
 
   const handleCommentClick = (itemId) => {
-    setActiveCommentItemId((prevId) => (prevId === itemId ? null : itemId));
+    if (!isLoggedIn) {
+      navigate("/login");
+    } else {
+      setActiveCommentItemId((prevId) => (prevId === itemId ? null : itemId));
+    }
   };
   const handleCancel = () => {
     navigate(`/`);
@@ -64,14 +73,18 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
   };
   const handleLike = async (item) => {
     try {
-      if (item.likes.includes(userInfo._id)) {
-        await unlikeItem(singleCollection._id, item._id);
-        item.likes = item.likes.filter((id) => id !== userInfo._id);
+      if (!isLoggedIn) {
+        navigate("/login");
       } else {
-        await likeItem(singleCollection._id, item._id);
-        item.likes.push(userInfo.id);
+        if (item.likes.includes(userInfo._id)) {
+          await unlikeItem(singleCollection._id, item._id);
+          item.likes = item.likes.filter((id) => id !== userInfo._id);
+        } else {
+          await likeItem(singleCollection._id, item._id);
+          item.likes.push(userInfo.id);
+        }
+        setCollectionItems([...collectionItems]);
       }
-      setCollectionItems([...collectionItems]);
     } catch (error) {
       console.error("Error updating like status", error);
     }
@@ -84,7 +97,7 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
         collectionItems?.map((item) => (
           <div
             key={item._id}
-            className="flex  bg-[#A0AECD] justify-between mt-2 dark:bg-gray-500/20 p-2 rounded"
+            className="flex flex-col md:flex-row gap-y-5 bg-[#A0AECD] justify-between mt-2 dark:bg-gray-500/20 p-2 rounded"
           >
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-4 flex-wrap w-3/1">
@@ -146,19 +159,20 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
               </div>
             </div>
             <div>
-              {(userInfo?.role === "admin" ||
-                userInfo?._id === singleCollection?.user_id) && (
-                <>
-                  <Edit
-                    onClick={() => handleOpenEditItem(item)}
-                    sx={{ cursor: "pointer" }}
-                  />
-                  <Delete
-                    onClick={() => handleDeleteCollectionItem(item?._id)}
-                    sx={{ cursor: "pointer" }}
-                  />
-                </>
-              )}
+              {isLoggedIn &&
+                (userInfo?.role === "admin" ||
+                  userInfo?._id === singleCollection?.user_id) && (
+                  <>
+                    <Edit
+                      onClick={() => handleOpenEditItem(item)}
+                      sx={{ cursor: "pointer" }}
+                    />
+                    <Delete
+                      onClick={() => handleDeleteCollectionItem(item?._id)}
+                      sx={{ cursor: "pointer" }}
+                    />
+                  </>
+                )}
             </div>
           </div>
         ))
@@ -166,17 +180,18 @@ const CollectionItemCard = ({ singleCollection, t, handleOpenEditItem }) => {
         <h2>No item available </h2>
       )}
       <div>
-        {(userInfo?.role === "admin" ||
-          userInfo?._id === singleCollection?.user_id) && (
-          <>
-            <button
-              onClick={() => navigate("/collection/add-item")}
-              className="mt-5 mr-2 bg-[#A0AECD] dark:bg-red-500/30 rounded p-1 dark:text-white font-semibold text-[20px]"
-            >
-              {t("addNew")}
-            </button>
-          </>
-        )}
+        {isLoggedIn &&
+          (userInfo?.role === "admin" ||
+            userInfo?._id === singleCollection?.user_id) && (
+            <>
+              <button
+                onClick={() => navigate("/collection/add-item")}
+                className="mt-5 mr-2 bg-[#A0AECD] dark:bg-red-500/30 rounded p-1 dark:text-white font-semibold text-[20px]"
+              >
+                {t("addNew")}
+              </button>
+            </>
+          )}
         <button
           className="mt-5 bg-[#A0AECD] dark:bg-red-500/30 rounded p-1 dark:text-white font-semibold text-[20px]"
           onClick={handleCancel}

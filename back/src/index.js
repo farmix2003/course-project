@@ -13,7 +13,7 @@ dotenv.config();
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://course-project-front-one.vercel.app',
     credentials: true
 }));
 
@@ -466,7 +466,7 @@ router.post('/api/collections/:collectionId/items/:itemId/comments', authenticat
     }
 });
 
-router.get('/api/collections/:collectionId/items/:itemId/comments', authenticateToken, async (req, res) => {
+router.get('/api/collections/:collectionId/items/:itemId/comments', async (req, res) => {
     try {
         const { collectionId, itemId } = req.params;
         const collection = await Collection.findById(collectionId);

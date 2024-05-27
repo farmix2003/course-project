@@ -225,6 +225,7 @@ function App() {
               singleCollection={singleCollection}
               t={t}
               handleOpenEditItem={handleOpenEditItem}
+              isLoggedIn={isLoggedIn}
             />
           }
         />

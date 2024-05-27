@@ -51,7 +51,7 @@ const AddNewItem = ({ singleCollection, t }) => {
       <h1 className="text-[30px]">{t("addNewItem")}</h1>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-[50%] bg-gray-400 gap-1 dark:bg-gray-400/20 p-10"
+        className="flex flex-col w-[100%] md:w-[50%] bg-gray-400 gap-1 dark:bg-gray-400/20 p-10"
       >
         <label htmlFor="title" className="font-semibold">
           Title:
@@ -126,15 +126,15 @@ const AddNewItem = ({ singleCollection, t }) => {
             )}
           </div>
         ))}
-        <div className="flex items-center justify-evenly m-2">
+        <div className="flex items-start md:items-center justify-evenly m-2">
           <button
             type="submit"
-            className="bg-green-600 px-10 text-white rounded text-[20px]"
+            className="bg-green-600 px-7 md:px-10 text-white rounded text-lg md:text-[20px]"
           >
             {t("add")}
           </button>
           <button
-            className="bg-red-600 text-white px-8 rounded text-[20px]"
+            className="bg-red-600 text-white px-6 md:px-8 rounded text-lg md:text-[20px]"
             type="button"
             onClick={() => back(singleCollection._id)}
           >

@@ -65,12 +65,12 @@ const Home = ({
         </button>
       )}
       <div className="flex flex-col flex-wrap gap-10">
-        <h1 className="text-[30px]">Recently Added Items</h1>
-        <div className="flex flex-col gap-3 items-start w-[93%]">
+        <h1 className="text-[30px]">{t("recentlyAdded")}</h1>
+        <div className="flex flex-col gap-3 items-start w-[80%] md:w-[93%]">
           {latestItems?.map((item, i) => (
             <div key={i} className="w-full">
-              <div className="flex bg-[#A0AECD] items-center justify-between dark:bg-gray-500/20 gap-5 p-3 rounded">
-                <div className="flex gap-10">
+              <div className="flex flex-col md:flex-row bg-[#A0AECD] items-start md:items-center justify-between dark:bg-gray-500/20 gap-5 p-3 rounded">
+                <div className="flex flex-col md:flex-row gap-10">
                   <h5>Collection: {item.collection}</h5>
                   <span>Item: {item.name}</span>
                   {item?.customFields?.map((item, idx) => (
@@ -92,7 +92,6 @@ const Home = ({
                     );
                     getSingleCollection(
                       item.collectionId,
-
                       collections.find(
                         (collection) => collection._id === item.collectionId
                       )
@@ -100,13 +99,13 @@ const Home = ({
                   }}
                   className="px-[2px] py-[1px] font-semibold bg-gray-600/20 dark:bg-red-700/20 rounded"
                 >
-                  Jump
+                  {t("jump")}
                 </button>
               </div>
             </div>
           ))}
         </div>
-        <h1 className="text-[30px]">Top Collections</h1>
+        <h1 className="text-[30px]">{t("topCollections")}</h1>
         <div className="flex gap-2 w-screen flex-wrap">
           {topCollections.map((collection, i) => (
             <div
@@ -134,9 +133,9 @@ const Home = ({
                   >
                     <Visibility />
                   </button>
-                  {((isLoggedIn && userInfo?.role === "admin") ||
-                    userInfo?._id === collection?.user_id) && (
-                    <>
+                  {isLoggedIn &&
+                    (userInfo?.role === "admin" ||
+                      userInfo?._id === collection?.user_id) && (
                       <>
                         <button
                           className="text-red-600"
@@ -151,8 +150,7 @@ const Home = ({
                           <Edit />
                         </button>
                       </>
-                    </>
-                  )}
+                    )}
                 </div>
               </div>
             </div>
@@ -164,13 +162,13 @@ const Home = ({
               onClick={handleIsSeeAll}
               className="px-10 py-1 rounded mt-[-30px] bg-gray-600/20 dark:bg-red-700/20 text-[20px] font-semibold"
             >
-              See all
+              {t("seeAll")}
             </button>
           )}
         </div>
         {isSeeAll && (
           <>
-            <h1 className="text-[30px]">All Collections</h1>
+            <h1 className="text-[30px]">{t("allCollections")}</h1>
             <div className="flex flex-wrap gap-2">
               {collections.length > 0 ? (
                 collections.map((collection) => (
@@ -190,7 +188,7 @@ const Home = ({
                   </div>
                 ))
               ) : (
-                <h2>No collection created yet</h2>
+                <h2>{t("noCollection")}</h2>
               )}
             </div>
           </>
@@ -201,7 +199,7 @@ const Home = ({
               onClick={handleIsSeeAll}
               className="px-10 py-1 rounded mt-[-30px] bg-gray-600/20 dark:bg-red-700/20 text-[20px] font-semibold"
             >
-              Close
+              {t("close")}
             </button>
           )}
         </div>

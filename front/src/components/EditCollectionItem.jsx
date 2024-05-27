@@ -54,12 +54,12 @@ const EditCollectionItem = ({ singleCollection, singleCollectionItem, t }) => {
   };
 
   return (
-    <div className="flex flex-col rounded-md w-[50%] gap-10 p-10 dark:text-white bg-[#A0AECD] dark:bg-slate-700/10 mt-10 mx-auto items-center justify-center">
+    <div className="flex flex-col rounded-md w-[85%] md:w-[50%] gap-10 p-10 dark:text-white bg-[#A0AECD] dark:bg-slate-700/10 mt-10 mx-auto items-center justify-center">
       <h2 className="text-[30px]">{t("editCollectionItem")}</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-start gap-3 w-[50%]"
+        className="flex flex-col items-start gap-3 w-[100%]"
       >
         <div className="flex gap-2 justify-around w-full">
           <label className="font-semibold">Title:</label>

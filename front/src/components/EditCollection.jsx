@@ -43,7 +43,7 @@ const EditCollection = ({ setCollectionData, collectionData, t }) => {
   };
 
   return (
-    <div className="w-[40%] mx-auto mt-10 rounded dark:text-white flex flex-col justify-center items-center bg-[#A0AECD] dark:bg-gray-800 p-10">
+    <div className="w-[85%] md:w-[40%] mx-auto mt-10 rounded dark:text-white flex flex-col justify-center items-center bg-[#A0AECD] dark:bg-gray-800 p-1 md:p-10">
       <h1 className="text-[30px] my-2">{t("editCollection")}</h1>
       <form
         onSubmit={handleSubmit}
