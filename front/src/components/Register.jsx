@@ -14,6 +14,7 @@ const Login = ({ t }) => {
     try {
       const response = registerUser(username, email, password);
       console.log(response.data);
+      navigate("/login");
       return response.data;
     } catch (error) {
       console.log("error", error);
