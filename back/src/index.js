@@ -241,6 +241,7 @@ router.post('/api/users/logout', (req, res) => {
     res.status(200).json({ success: true, message: "Successfully logged out" });
 });
 
+
 // Collection routes
 router.post('/api/collections', authenticateToken, async (req, res) => {
     try {
@@ -594,7 +595,6 @@ router.get('/api/latest-items', async (req, res) => {
     }
 });
 
-
 router.get('/api/top-collections', async (req, res) => {
     try {
         const topCollections = await Collection.aggregate([
@@ -625,8 +625,6 @@ router.get('/api/top-collections', async (req, res) => {
     }
 });
 
-
-
 router.get('/api/tags', async (req, res) => {
     const { prefix } = req.query;
     try {
@@ -650,7 +648,6 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-// Server setup
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
