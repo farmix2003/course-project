@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function CollectionForm({ onCreateCollection }) {
+function CollectionForm({ onCreateCollection, t }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -33,10 +33,13 @@ function CollectionForm({ onCreateCollection }) {
   };
 
   return (
-    <div className="flex justify-center m-2 items-center min-h-[50%] md:min-h-[90%]">
+    <div className="flex flex-col md:flex-row gap-6 justify-center m-2 items-center min-h-[50%] md:min-h-[90%]">
+      <h1 className=" mt-2 dark:text-white text-[30px]">
+        {t("createCollection")}
+      </h1>
       <form
         onSubmit={handleSubmit}
-        className="w-[85%] md:w-[50%] h-[90%] md:h-[90%] gap-3 flex flex-col flex-wrap bg-[#A0AECD] dark:bg-gray-100/20 p-10 rounded shadow-md"
+        className="w-[85%] md:w-[50%] h-[90%] md:h-[90%] gap-3 justify-start flex flex-col flex-wrap bg-[#A0AECD] dark:bg-gray-100/20 p-3 md:p-10 rounded shadow-md"
       >
         <input
           type="text"
@@ -113,7 +116,7 @@ function CollectionForm({ onCreateCollection }) {
           {customFields.map((field, index) => (
             <div
               key={index}
-              className="w-full flex items-center justify-start mt-2"
+              className=" w-full  flex items-center justify-start mt-2"
             >
               <input
                 className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
@@ -126,7 +129,7 @@ function CollectionForm({ onCreateCollection }) {
                 placeholder="Field Name"
               />
               <input
-                className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
+                className="bg-transparent w-[50%] dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
                 type="text"
                 value={field.type}
                 readOnly
@@ -137,15 +140,15 @@ function CollectionForm({ onCreateCollection }) {
         <div className="flex gap-2 h-[50%]">
           <button
             onClick={() => navigate("/")}
-            className="w-full mt-5 bg-gray-50/30 dark:bg-blue-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
+            className="w-full mt-5 bg-gray-50/30 dark:bg-blue-700/30 rounded p-1 dark:text-white font-semibold text[16px] md:text-[20px]"
           >
-            Home
+            {t("home")}
           </button>
           <button
             type="submit"
-            className="w-full mt-5 bg-gray-50/30 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text-[20px]"
+            className="w-full mt-5 bg-gray-50/30 dark:bg-red-700/30 rounded p-1 dark:text-white font-semibold text[15px] md:text-[20px]"
           >
-            Create Collection
+            {t("create")}
           </button>
         </div>
       </form>

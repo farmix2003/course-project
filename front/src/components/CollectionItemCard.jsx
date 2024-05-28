@@ -73,31 +73,29 @@ const CollectionItemCard = ({
   };
   const handleLike = async (item) => {
     try {
-        if (!isLoggedIn) {
-            navigate("/login");
+      if (!isLoggedIn) {
+        navigate("/login");
+      } else {
+        let updatedItems;
+        if (item.likes.includes(userInfo._id)) {
+          await unlikeItem(singleCollection._id, item._id);
+          updatedItems = collectionItems.map((i) =>
+            i._id === item._id
+              ? { ...i, likes: i.likes.filter((id) => id !== userInfo._id) }
+              : i
+          );
         } else {
-            let updatedItems;
-            if (item.likes.includes(userInfo._id)) {
-                await unlikeItem(singleCollection._id, item._id);
-                updatedItems = collectionItems.map((i) => 
-                    i._id === item._id 
-                        ? { ...i, likes: i.likes.filter((id) => id !== userInfo._id) }
-                        : i
-                );
-            } else {
-                await likeItem(singleCollection._id, item._id);
-                updatedItems = collectionItems.map((i) => 
-                    i._id === item._id 
-                        ? { ...i, likes: [...i.likes, userInfo._id] }
-                        : i
-                );
-            }
-            setCollectionItems(updatedItems);
+          await likeItem(singleCollection._id, item._id);
+          updatedItems = collectionItems.map((i) =>
+            i._id === item._id ? { ...i, likes: [...i.likes, userInfo._id] } : i
+          );
         }
+        setCollectionItems(updatedItems);
+      }
     } catch (error) {
-        console.error("Error updating like status", error);
+      console.error("Error updating like status", error);
     }
-};
+  };
 
   return (
     <div className="dark:text-white overflow-hidden bg-gray-500/20 mt-3 w-[90%] mb-10 rounded-md mx-auto flex flex-col gap-2 p-10">
@@ -120,7 +118,9 @@ const CollectionItemCard = ({
                   </b>
                 ))}
               </div>
-              <span>{item.tags}</span>
+              <span className="text-blue-800 dark:text-blue-400">
+                {item.tags}
+              </span>
             </div>
             <div>
               <div className="flex flex-col">

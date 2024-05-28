@@ -19,7 +19,7 @@ const Home = ({
   topCollections,
   t,
 }) => {
-  console.log(latestItems);
+  console.log("Latest ", latestItems);
   const navigate = useNavigate();
   const [isSeeAll, setIsSeeAll] = useState(false);
   const { userInfo } = useUserInfo();
@@ -31,7 +31,6 @@ const Home = ({
         navigate(`/collections/item/${id}`);
       } else {
         const response = await getCollection(id);
-        console.log(response);
         setCollectionData(response);
         setSingleCollection(response);
         navigate(`/collections/item/${id}`);
@@ -54,6 +53,7 @@ const Home = ({
   const handleIsSeeAll = () => {
     setIsSeeAll(!isSeeAll);
   };
+
   return (
     <div className="dark:text-white flex flex-col items-start gap-4 ml-5 p-5">
       {isLoggedIn && (
@@ -65,7 +65,7 @@ const Home = ({
         </button>
       )}
       <div className="flex flex-col flex-wrap gap-10">
-        <h1 className="text-[30px]">{t("recentlyAdded")}</h1>
+        <h1 className="text-[30px] underline">{t("recentlyAdded")}</h1>
         <div className="flex flex-col gap-3 items-start w-[80%] md:w-[93%]">
           {latestItems?.map((item, i) => (
             <div key={i} className="w-full">
@@ -73,14 +73,12 @@ const Home = ({
                 <div className="flex flex-col md:flex-row gap-10">
                   <h5>Collection: {item.collection}</h5>
                   <span>Item: {item.name}</span>
-                  {item?.customFields?.map((item, idx) => (
-                    <b key={idx} className="italic">
-                      <span className="font-normal not-italic">
-                        {item.name}:
-                      </span>{" "}
-                      {item.value}
+                  {item.author !== "Unknown" && (
+                    <b className="italic">
+                      <span className="font-normal not-italic">Author:</span>{" "}
+                      {item.author}
                     </b>
-                  ))}
+                  )}
                 </div>
                 <button
                   onClick={() => {
@@ -105,7 +103,7 @@ const Home = ({
             </div>
           ))}
         </div>
-        <h1 className="text-[30px]">{t("topCollections")}</h1>
+        <h1 className="text-[30px] underline">{t("topCollections")}</h1>
         <div className="flex gap-2 w-screen flex-wrap">
           {topCollections.map((collection, i) => (
             <div
@@ -168,7 +166,7 @@ const Home = ({
         </div>
         {isSeeAll && (
           <>
-            <h1 className="text-[30px]">{t("allCollections")}</h1>
+            <h1 className="text-[30px] underline">{t("allCollections")}</h1>
             <div className="flex flex-wrap gap-2">
               {collections.length > 0 ? (
                 collections.map((collection) => (

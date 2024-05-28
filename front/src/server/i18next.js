@@ -33,6 +33,7 @@ i18next.use(initReactI18next).init({
                 close: 'Close',
                 noCollection: 'No collection created yet',
                 jump: 'Jump',
+                create: 'Create Collection',
             }
         },
         uz: {
@@ -59,7 +60,8 @@ i18next.use(initReactI18next).init({
                 seeAll: "Barchasini ko'rish",
                 close: 'Yopish',
                 noCollection: 'Hali hech bir kolleksiya yaratilmadi',
-                jump: 'Ko\'rish'
+                jump: 'Ko\'rish',
+                create: 'Kolleksiya yarat',
             }
         },
     }

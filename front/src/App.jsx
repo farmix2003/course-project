@@ -143,7 +143,7 @@ function App() {
     navigate("/collection/edit-item");
   };
   return (
-    <div className="app bg-slate-100 dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-hidden md:overflow-x-hidden">
+    <div className="app bg-slate-200 dark:bg-[#110022] min-h-screen w-screen sm:overflow-y-scroll overflow-x-hidden md:overflow-x-hidden">
       <Navbar
         t={t}
         i18n={i18n}
@@ -205,7 +205,7 @@ function App() {
         <Route
           path="/create-collection"
           element={
-            <CollectionForm onCreateCollection={handleCreateCollection} />
+            <CollectionForm onCreateCollection={handleCreateCollection} t={t} />
           }
         />
         <Route

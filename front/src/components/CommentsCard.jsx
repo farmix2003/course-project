@@ -18,7 +18,7 @@ const CommentsCard = ({ item, singleCollection }) => {
   }, [comments, setComments, singleCollection._id, item._id]);
 
   return (
-    <div className="h-[100px] w-[100%] p-4 flex-col flex-wrap overflow-scroll scrollbar bg-red-500/10">
+    <div className="h-[100px] w-[100%] p-4 flex-col flex-wrap overflow-scroll rounded-sm scrollbar bg-gray-900/20 dark:bg-red-500/10">
       {comments.length > 0 ? (
         comments.map((comment, i) => (
           <div key={i}>

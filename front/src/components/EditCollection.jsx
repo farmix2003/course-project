@@ -16,19 +16,22 @@ const EditCollection = ({ setCollectionData, collectionData, t }) => {
     }));
   };
 
-  const handleCustomFieldChange = (index, name, value) => {
-    const newCustomFields = [...formData.customFields];
-    newCustomFields[index] = { ...newCustomFields[index], [name]: value };
+  const handleCustomFieldChange = (index, field, value) => {
+    const updatedFields = [...formData.customFields];
+    updatedFields[index][field] = value;
     setFormData((prevState) => ({
       ...prevState,
-      customFields: newCustomFields,
+      customFields: updatedFields,
     }));
   };
 
-  const addCustomField = () => {
+  const addCustomField = (type) => {
     setFormData((prevState) => ({
       ...prevState,
-      customFields: [...prevState.customFields, { name: "", value: "" }],
+      customFields: [
+        ...(prevState.customFields ? prevState.customFields : []),
+        { name: "", type: type, value: "" },
+      ],
     }));
   };
 
@@ -91,30 +94,71 @@ const EditCollection = ({ setCollectionData, collectionData, t }) => {
             className="bg-transparent outline-none border-b-2 border-black dark:border-white"
           />
         </div>
-        {formData?.customFields?.map((field, index) => (
-          <div
-            key={index}
-            className="flex gap-2 w-[100%] justify-between items-center"
-          >
-            <label>Customized Field:</label>
-            <input
-              type="text"
-              name="name"
-              value={field.name}
-              onChange={(e) =>
-                handleCustomFieldChange(index, e.target.name, e.target.value)
-              }
-              className="bg-transparent outline-none border-b-2 border-black dark:border-white"
-            />
+        <h3 className="dark:text-gray-300 text-[20px] font-semibold">
+          Custom Fields
+        </h3>
+        <div className="flex flex-col">
+          <div className="gap-3 flex flex-wrap">
+            <button
+              className="bg-red-600/10 p-1 rounded dark:text-white"
+              type="button"
+              onClick={() => addCustomField("integer")}
+            >
+              Add Integer Field
+            </button>
+            <button
+              type="button"
+              className="bg-red-600/10 p-1 rounded dark:text-white"
+              onClick={() => addCustomField("string")}
+            >
+              Add String Field
+            </button>
+            <button
+              type="button"
+              className="bg-red-600/10 p-1 rounded dark:text-white"
+              onClick={() => addCustomField("multiline")}
+            >
+              Add Multiline Field
+            </button>
+            <button
+              type="button"
+              className="bg-red-600/10 p-1 rounded dark:text-white"
+              onClick={() => addCustomField("boolean")}
+            >
+              Add Boolean Field
+            </button>
+            <button
+              type="button"
+              className="bg-red-600/10 p-1 rounded dark:text-white"
+              onClick={() => addCustomField("date")}
+            >
+              Add Date Field
+            </button>
           </div>
-        ))}
-        <button
-          type="button"
-          onClick={addCustomField}
-          className="mt-3 bg-blue-500 rounded p-1 text-white font-semibold"
-        >
-          Add Custom Field
-        </button>
+          {formData?.customFields?.map((field, index) => (
+            <div
+              key={index}
+              className="w-full flex items-center justify-start mt-2"
+            >
+              <input
+                className="bg-transparent dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
+                type="text"
+                value={field.name}
+                required
+                onChange={(e) =>
+                  handleCustomFieldChange(index, "name", e.target.value)
+                }
+                placeholder="Field Name"
+              />
+              <input
+                className="bg-transparent w-[50%] dark:text-white outline-none border-b-2 border-black dark:border-white placeholder-black dark:placeholder-white"
+                type="text"
+                value={field.type}
+                readOnly
+              />
+            </div>
+          ))}
+        </div>
         <div className="flex mt-3 gap-2 justify-around w-[100%]">
           <button
             type="submit"

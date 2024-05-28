@@ -94,7 +94,7 @@ function AdminPanel({ users, user, setUsers, t }) {
     (loggedUser) => loggedUser.role === "admin" && loggedUser.email === user
   );
   return (
-    <div className="bg-gray-600/30 dark:bg-gray-500/30 p-2 mt-10 rounded-md h-[400px] w-[95%] md:w-[80%] ml-[10px] md:ml-[100px]">
+    <div className="bg-gray-600/30 dark:bg-gray-500/30 p-3 md:p-2  mt-10 rounded-md min-h-[400px] w-[95%] md:w-[80%] ml-[10px] md:ml-[100px]">
       {isAdmin && (
         <ToolBar
           handleDeleteUser={handleDeleteUser}
@@ -117,11 +117,21 @@ function AdminPanel({ users, user, setUsers, t }) {
                 onChange={handleSelectAllUsers}
               />
             </th>
-            <th className="dark:text-gray-400 text-[16px]">ID</th>
-            <th className="dark:text-gray-400">Username</th>
-            <th className="dark:text-gray-400">Email</th>
-            <th className="dark:text-gray-400">Status</th>
-            <th className="dark:text-gray-400">Role</th>
+            <th className="dark:text-gray-400 text-[16px] hidden md:table-cell">
+              ID
+            </th>
+            <th className="dark:text-gray-400 hidden md:table-cell">
+              Username
+            </th>
+            <th className="dark:text-gray-400 text-[15px] md:text-[17px]">
+              Email
+            </th>
+            <th className="dark:text-gray-400 text-[15px] md:text-[17px]">
+              Status
+            </th>
+            <th className="dark:text-gray-400 text-[15px] md:text-[17px]">
+              Role
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -135,11 +145,21 @@ function AdminPanel({ users, user, setUsers, t }) {
                     onChange={() => handleSelectionChange(user._id)}
                   />
                 </td>
-                <td className={`dark:text-white`}>{user._id.slice(5, 8)}</td>
-                <td className="dark:text-white">{user.username}</td>
-                <td className="dark:text-white">{user.email}</td>
-                <td className="dark:text-white">{user.status}</td>
-                <td className="dark:text-white">{user.role}</td>
+                <td className={`dark:text-white hidden md:table-cell`}>
+                  {user._id.slice(5, 8)}
+                </td>
+                <td className="dark:text-white hidden md:table-cell">
+                  {user.username}
+                </td>
+                <td className="dark:text-white text-[14px] md:text-[16.5px]">
+                  {user.email}
+                </td>
+                <td className="dark:text-white text-[14px] md:text-[16.5px]">
+                  {user.status}
+                </td>
+                <td className="dark:text-white text-[14px] md:text-[16.5px]">
+                  {user.role}
+                </td>
               </tr>
             ))}
         </tbody>

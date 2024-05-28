@@ -130,12 +130,12 @@ const AddNewItem = ({ singleCollection, t }) => {
         <div className="flex items-start md:items-center justify-evenly m-2">
           <button
             type="submit"
-            className="bg-green-600 px-7 md:px-10 text-white rounded text-lg md:text-[20px]"
+            className="bg-green-600 px-3 md:px-10 text-white rounded text-lg md:text-[20px]"
           >
             {t("add")}
           </button>
           <button
-            className="bg-red-600 text-white px-6 md:px-8 rounded text-lg md:text-[20px]"
+            className="bg-red-600 text-white px-3 md:px-8 rounded text-lg md:text-[20px]"
             type="button"
             onClick={() => back(singleCollection._id)}
           >
