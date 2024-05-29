@@ -155,7 +155,7 @@ function App() {
         userInfo={userInfo}
         isAdmin={isAdmin}
       />
-      <div className="block md:hidden w-[100%] ml-5 mt-2">
+      <div className="block md:hidden w-[95%] ml-5 mt-2">
         <SearchBar />
       </div>
       <Routes>

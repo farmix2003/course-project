@@ -65,8 +65,10 @@ const Home = ({
         </button>
       )}
       <div className="flex flex-col flex-wrap gap-10">
-        <h1 className="text-[30px] underline">{t("recentlyAdded")}</h1>
-        <div className="flex flex-col gap-3 items-start w-[80%] md:w-[93%]">
+        <h1 className="text-[28px] md:text-[30px] underline">
+          {t("recentlyAdded")}
+        </h1>
+        <div className="flex flex-col gap-3 items-start w-[74%] md:w-[93%]">
           {latestItems?.map((item, i) => (
             <div key={i} className="w-full">
               <div className="flex flex-col md:flex-row bg-[#A0AECD] items-start md:items-center justify-between dark:bg-gray-500/20 gap-5 p-3 rounded">
@@ -103,7 +105,9 @@ const Home = ({
             </div>
           ))}
         </div>
-        <h1 className="text-[30px] underline">{t("topCollections")}</h1>
+        <h1 className="text-[28px] md:text-[30px] underline">
+          {t("topCollections")}
+        </h1>
         <div className="flex gap-2 w-screen flex-wrap">
           {topCollections.map((collection, i) => (
             <div
@@ -166,7 +170,9 @@ const Home = ({
         </div>
         {isSeeAll && (
           <>
-            <h1 className="text-[30px] underline">{t("allCollections")}</h1>
+            <h1 className="text-[28px] md:text-[30px] underline">
+              {t("allCollections")}
+            </h1>
             <div className="flex flex-wrap gap-2">
               {collections.length > 0 ? (
                 collections.map((collection) => (
