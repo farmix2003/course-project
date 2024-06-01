@@ -33,7 +33,7 @@ function CollectionForm({ onCreateCollection, t }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 justify-center m-2 items-center min-h-[50%] md:min-h-[90%]">
+    <div className="flex flex-col gap-6 justify-center m-2 items-center min-h-[50%] md:min-h-[90%]">
       <h1 className=" mt-2 dark:text-white text-[30px]">
         {t("createCollection")}
       </h1>
