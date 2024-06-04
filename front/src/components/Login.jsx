@@ -19,17 +19,18 @@ const Login = ({ setIsLoggedIn, setUserInfo, t }) => {
       const userId = response.userId;
       window.localStorage.setItem("token", token);
       window.localStorage.setItem("userId", userId);
+      console.log("res", response);
       setUserInfo(email);
       setIsLoggedIn(() => true);
-    } catch (e) {
-      if (e.response) {
+    } catch (err) {
+      if (err.response) {
         if (e.status === 403) {
           setError("Your account is blocked. Please contact support.");
         } else {
           setError("Invalid email or password");
         }
       } else {
-        setError("Failed to login! User not found");
+        setError("Failed to login!");
       }
     }
     console.log(email, password);
