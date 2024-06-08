@@ -94,7 +94,7 @@ function CollectionForm({ onCreateCollection, t }) {
             <button
               type="button"
               className="bg-red-600/10 p-1 rounded dark:text-white"
-              onClick={() => handleAddCustomField("multiline")}
+              onClick={() => handleAddCustomField("textarea")}
             >
               Add Multiline Field
             </button>

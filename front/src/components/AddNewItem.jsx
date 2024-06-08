@@ -13,7 +13,7 @@ const AddNewItem = ({ singleCollection, t }) => {
       return acc;
     }, {}),
   });
-
+  console.log(singleCollection);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
